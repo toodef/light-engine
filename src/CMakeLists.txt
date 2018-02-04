@@ -31,10 +31,26 @@ set(HEADER_FILES
         scene/scene.h
         engine.h)
 
+find_package(OpenGL)
+
+if (DEFINED ENV{GLM_ROOT})
+   set(GLM_ROOT $ENV{GLM_ROOT})
+elseif()
+   message(FATAL_ERROR "Please set GLM_ROOT environment variable")
+endif()
+
+if (DEFINED ENV{GLEW_ROOT})
+   set(GLEW_ROOT $ENV{GLEW_ROOT})
+elseif()
+   message(FATAL_ERROR "Please set GLEW_ROOT environment variable")
+endif()
+
+include_directories(${GLM_ROOT})
+include_directories(${GLEW_ROOT}/include)
+
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} assimp GL AntTweakBar boost_system GLEW Magick++ boost_filesystem boost_chrono glut)
+target_link_libraries(${PROJECT_NAME} GL GLEW)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
-
-INSTALL ( DIRECTORY src/ DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
+install ( DIRECTORY src/ DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
