@@ -1,10 +1,12 @@
 #pragma once
 
+#include <chrono>
+#include <optional>
+
 #include "../base.h"
 
 namespace environment
 {
-   using namespace debug;
    using namespace object;
 
    class timer_t
@@ -18,24 +20,24 @@ namespace environment
 
       void restart()
       {
-         start_time_ = chrono::system_clock::now();
+         start_time_ = std::chrono::system_clock::now();
       }
 
       template<typename T> T time()
       {
-         chrono::duration<T> res = chrono::system_clock::now() - start_time_;
+         std::chrono::duration<T> res = chrono::system_clock::now() - start_time_;
          return res.count();
       }
 
       template<typename T> T time_msec()
       {
-         chrono::duration<T> res = chrono::system_clock::now() - start_time_;
+         std::chrono::duration<T> res = chrono::system_clock::now() - start_time_;
 
          return res.count() * 1000.0f;
       }
 
    private:
-      chrono::system_clock::time_point start_time_;
+      std::chrono::system_clock::time_point start_time_;
    };
 
    class camera_t
@@ -71,7 +73,7 @@ namespace environment
              ,right;
       };
 
-      boost::optional<dep_data_t> dep_data_;
+      std::optional<dep_data_t> dep_data_;
 
       vec3 pos_
           ,look_at_;
@@ -171,7 +173,5 @@ namespace environment
       material_manager_ptr_t material_manager_;
       texture_manager_ptr_t  texture_manager_ ;
       buffer_manager_ptr_t   buffer_manager_  ;
-
-      console_t debug_;
    };
 }

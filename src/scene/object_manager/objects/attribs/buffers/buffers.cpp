@@ -80,7 +80,7 @@ buffer_manager_t::~buffer_manager_t()
 
 buffer_ptr_t buffer_manager_t::create_buffer( vertices_t data, GLenum usage_type )
 {
-   buffer_ptr_t new_buffer(new buffer_t(this));
+   buffer_ptr_t new_buffer = std::make_shared<buffer_t>(shared_from_this());
 
    new_buffer->data(data, usage_type);
 

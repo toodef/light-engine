@@ -10,9 +10,9 @@ object_t::object_t( effect_t const & effect, buffers_t const & buffers
                    ,render_param_t const & render_param, vec3 pos
                    ,vec4 color, float size
                    ,idx_buffers_t const & idx_buffers ):
-     material_          (effect.get<0>())
-   , texture_           (effect.get<1>())
-   , effect_id_         (effect.get<2>())
+     material_          (effect.material)
+   , texture_           (effect.texture)
+   , effect_id_         (effect.id)
    , buffers_           (buffers)
    , render_param_      (render_param)
    , pos_               (pos)
@@ -379,9 +379,9 @@ void object_t::set_wireframe( bool is_wireframe )
 
 void object_t::set_effect( effect_t const & effect )
 {
-   material_  = effect.get<0>();
-   texture_   = effect.get<1>();
-   effect_id_ = effect.get<2>();
+   material_  = effect.material;
+   texture_   = effect.texture;
+   effect_id_ = effect.id;
 }
 
 void object_t::set_color( vec4 const & color )

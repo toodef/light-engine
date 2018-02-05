@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "../../../../../base.h"
 
 using namespace SE;
@@ -19,7 +21,7 @@ material_manager_t::~material_manager_t()
 material_ptr_t material_manager_t::create_material( const string & vertex_shader_file, const string & fragment_shader_file
                                                    ,const string & geometry_shader_file )
 {
-   material_ptr_t new_material(new material_t(this));
+   material_ptr_t new_material = std::make_shared<material_t>(shared_from_this());
 
    new_material->load_material_from_file(vertex_shader_file, fragment_shader_file, geometry_shader_file);
 
@@ -31,7 +33,7 @@ material_ptr_t material_manager_t::create_material( const string & vertex_shader
 material_ptr_t material_manager_t::create_material_from_source( const string & vertex_shader, const string & fragment_shader
                                                                ,const string & geometry_shader )
 {
-   material_ptr_t new_material(new material_t(this));
+   material_ptr_t new_material = std::make_shared<material_t>(shared_from_this());
 
    new_material->load_material_from_source(vertex_shader.c_str(), fragment_shader.c_str(), geometry_shader.c_str());
 
@@ -398,11 +400,11 @@ void material_t::load_material_from_source( string const & vertex_shader_src, st
 
 char * load_file( string const & file_name )
 {
-   filesystem::path file(file_name);
+   std::filesystem::path file(file_name);
 
-   filesystem::ifstream in_file(file, std::ios::binary);
+   std::filesystem::ifstream in_file(file, std::ios::binary);
 
-   boost::uintmax_t size = boost::filesystem::file_size(file);
+   size_t size = boost::filesystem::file_size(file);
 
    GLchar * source(new GLchar[size + 1]);
 

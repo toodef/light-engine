@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(simple-engine)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES
-        debugging/console/console.cpp
         environment/environment.cpp
         scene/object_manager/objects/algorithms/lsvco/ls_vcache_opt.cpp
         scene/object_manager/objects/attribs/buffers/buffers.cpp
@@ -18,7 +17,6 @@ set(SOURCE_FILES
 
 set(HEADER_FILES
         base.h
-        debugging/console/console.h
         environment/environment.h
         scene/object_manager/objects/algorithms/lsvco/acmr.h
         scene/object_manager/objects/algorithms/lsvco/ls_vcache_opt.h

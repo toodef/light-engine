@@ -6,201 +6,14 @@ using namespace SE;
 /// engine_t class functions
 ////////////////////////////////////////
 
-void gl_debug_proc( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, GLchar const * message,
-                    GLvoid const * user_param
-)
+void gl_debug_proc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, GLchar const * message,
+   GLvoid const * user_param)
 {
    if (type == GL_DEBUG_TYPE_ERROR_ARB)
    {
-      cerr << message << endl;
+      std::cerr << message << endl;
       exit(1);
    }
-}
-
-void reshape_func( int w, int h )
-{
-   if (w < 10)
-      w = 10;
-
-   if (h < 10)
-      h = 10;
-
-   glViewport(0, 0, w, h);
-
-   engine.set_width(w);
-   engine.set_height(h);
-
-   TwWindowSize(engine.width(), engine.height());
-
-   engine.update_proj();
-}
-
-bool key_buf[256] = {0};
-
-void close_func()
-{
-   TwTerminate();
-   exit(0);
-}
-
-bool is_standart_cam = true;
-
-void keyboard_process()
-{
-   if (key_buf[27])
-      close_func();
-
-   switch (is_standart_cam)
-   {
-      case true:
-         if (key_buf['w'])
-            engine.move_camera(0.1f, CW_front);
-
-         if (key_buf['a'])
-            engine.move_camera(0.1f, CW_left);
-
-         if (key_buf['s'])
-            engine.move_camera(0.1f, CW_back);
-
-         if (key_buf['d'])
-            engine.move_camera(0.1f, CW_right);
-
-         if (key_buf['q'])
-            engine.move_camera(0.1f, CW_down);
-
-         if (key_buf['e'])
-            engine.move_camera(0.1f, CW_up);
-         break;
-
-      case false:
-         if (key_buf['w'])
-            engine.move_fake_camera(0.1f, CW_front);
-
-         if (key_buf['a'])
-            engine.move_fake_camera(0.1f, CW_left);
-
-         if (key_buf['s'])
-            engine.move_fake_camera(0.1f, CW_back);
-
-         if (key_buf['d'])
-            engine.move_fake_camera(0.1f, CW_right);
-
-         if (key_buf['q'])
-            engine.move_fake_camera(0.1f, CW_down);
-
-         if (key_buf['e'])
-            engine.move_fake_camera(0.1f, CW_up);
-         break;
-   }
-}
-
-void keyboard_func( unsigned char button, int x, int y )
-{
-   key_buf[button] = 1;
-
-   static bool old_cam = false;
-
-   if (button == 9)
-   {
-      bool tmp = is_standart_cam;
-
-      if (is_standart_cam)
-         engine.enable_fake_cam(true);
-      else
-         engine.enable_fake_cam(false);
-
-      is_standart_cam = old_cam;
-      old_cam = tmp;
-   }
-
-   TwEventKeyboardGLUT(button, x, y);
-}
-
-void keyboard_up( unsigned char button, int x, int y )
-{
-   if (button == 'f')
-   {
-      if (engine.frustum_state())
-         engine.draw_frustum(false);
-      else
-         engine.draw_frustum(true);
-   }
-
-   key_buf[button] = 0;
-}
-
-int old_x, old_y;
-bool is_rot = 1;
-
-bool is_debug = 0;
-
-void mouse( int button, int state, int x, int y )
-{
-   if (button == GLUT_LEFT_BUTTON)
-   {
-      old_x = x;
-      old_y = y;
-
-      is_rot = 1;
-   } else
-      is_rot = 0;
-
-   is_debug = 0;
-
-   TwEventMouseButtonGLUT(button, state, x, y);
-}
-
-#ifndef GLUTCALLBACK
-   #define GLUTCALLBACK
-#endif
-
-void GLUTCALLBACK tw_mouse_func( int x, int y )
-{
-   if (!TwEventMouseMotionGLUT(x, y))
-   {
-      is_debug = 1;
-   }
-}
-
-void mouse_func( int x, int y )
-{
-   tw_mouse_func(x, y);
-
-   if (is_rot && is_debug)
-   {
-      switch (is_standart_cam)
-      {
-         case true:
-            engine.rotate_camera((float) (old_x - x) / 200.f, (float) (old_y - y) / 200.f);
-            break;
-         case false:
-            engine.rotate_fake_cam((float) (old_x - x) / 200.f, (float) (old_y - y) / 200.f);
-            break;
-      }
-
-      old_x = x;
-      old_y = y;
-   }
-
-   TwEventMouseMotionGLUT(x, y);
-}
-
-void mouse_wheel_func( int whell, int direction, int x, int y )
-{
-   float new_va = engine.view_angle() - direction;
-
-   if (new_va > 0 && new_va < 180)
-      engine.set_fake_cam_va(new_va);
-}
-
-void display_func()
-{
-   keyboard_process();
-
-   engine.on_display();
-
-   glutSwapBuffers();
-   glutPostRedisplay();
 }
 
 engine_t & engine_t::instance()
@@ -211,48 +24,18 @@ engine_t & engine_t::instance()
 
 void engine_t::init( int argc, char ** argv, string const & window_name )
 {
-   glutInit(&argc, argv);
-
-   glutInitWindowSize(800, 700);
-   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-   glutInitContextVersion(4, 2);
-   glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-   glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
-
-   glutPassiveMotionFunc((GLUTmousemotionfun) TwEventMouseMotionGLUT);
-   glutSpecialFunc((GLUTspecialfun) TwEventSpecialGLUT);
-
-   TwGLUTModifiersFunc(glutGetModifiers);
-
-   glutCreateWindow(window_name.c_str());
-
    if (glewInit() != GLEW_OK)
-   {
       cerr << "GLEW init failed!" << endl;
-   }
 
    if (!GL_VERSION_4_2)
-   {
       cerr << "OpenGL 4.2 not supported!" << endl;
-   }
 
    glDebugMessageCallbackARB(gl_debug_proc, NULL);
    glClampColorARB(GL_CLAMP_READ_COLOR_ARB, GL_FALSE);
    glClampColorARB(GL_CLAMP_FRAGMENT_COLOR_ARB, GL_FALSE);
    glClampColorARB(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);
 
-   glutReshapeFunc(reshape_func);
-   glutDisplayFunc(display_func);
-   glutKeyboardFunc(keyboard_func);
-   glutKeyboardUpFunc(keyboard_up);
-   glutCloseFunc(close_func);
-   glutMouseFunc(mouse);
-   glutMotionFunc(mouse_func);
-   glutMouseWheelFunc(mouse_wheel_func);
-
    env_.reset(new env_t(window_name, material_manager_, texture_manager_, camera_t(vec3(1, 1, 1), vec3(0, 0, 0)), 800, 700, view_angle_, near_, far_));
-
-   Magick::InitializeMagick("");
 
    update_proj();
    update_mvp();
@@ -269,9 +52,9 @@ void engine_t::init( int argc, char ** argv, string const & window_name )
 
 engine_t::engine_t()
 {
-   material_manager_ = new material_manager_t();
-   texture_manager_ = new texture_manager_t();
-   buffer_manager_ = new buffer_manager_t();
+   material_manager_ = std::make_shared<material_manager_t>();
+   texture_manager_ = std::make_shared<texture_manager_t>();
+   buffer_manager_ = std::make_shared<buffer_manager_t>();
    view_angle_ = 20.0f;
    near_ = 0.1f;
    far_ = 100.0f;
@@ -281,20 +64,6 @@ engine_t::engine_t()
    delta_time_ = 0;
    timer_ = environment::timer_t();
    accum_frames_count_ = 30;
-}
-
-void engine_t::start()
-{
-   try
-   {
-      glutMainLoop();
-   }
-   catch (std::exception const & err)
-   {
-      cerr << err.what() << endl;
-      return;
-   }
-
 }
 
 engine_t::~engine_t()
@@ -517,8 +286,6 @@ void engine_t::draw_frame()
       glBindTexture(GL_TEXTURE_2D, 0);
    }
 
-   TwRefreshBar(env_->debug_.bar());
-
    glDisable(GL_DEPTH_TEST);
 }
 
@@ -551,24 +318,19 @@ material_ptr_t engine_t::create_material( const string & vertex_shader, const st
    return material_manager_->create_material(vertex_shader, fragment_shader, geometry_shader);
 }
 
-texture_ptr_t engine_t::create_texture( const string & file_name, tex_params_t const & params )
+texture_ptr_t engine_t::create_texture( tex_params_t const & params )
 {
-   return texture_manager_->create_texture(file_name, params);
+   return texture_manager_->create_texture(params);
 }
 
-texture_ptr_t engine_t::create_texture( const string & file_name, GLenum type )
+texture_ptr_t engine_t::create_texture( GLenum type )
 {
-   return texture_manager_->create_texture(file_name, type);
+   return texture_manager_->create_texture(type);
 }
 
-texture_ptr_t engine_t::create_texture( const vector<string> & files_names, tex_params_t const & params )
+texture_ptr_t engine_t::create_texture( )
 {
-   return texture_manager_->create_texture(files_names, params);
-}
-
-texture_ptr_t engine_t::create_texture( const vector<string> & files_names )
-{
-   return texture_manager_->create_texture(files_names);
+   return texture_manager_->create_texture();
 }
 
 buffer_ptr_t engine_t::create_buffer( vertices_t data, size_t size, GLenum usage_type )
@@ -679,11 +441,6 @@ int engine_t::height() const
 camera_t engine_t::cam() const
 {
    return env_->cam_;
-}
-
-console_t engine_t::debug_bar() const
-{
-   return env_->debug_;
 }
 
 void engine_t::update_frustum()

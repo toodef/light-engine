@@ -12,13 +12,14 @@ camera_t::camera_t( vec3 const & pos, vec3 const & look_at, quat const & q, vec3
      pos_(pos)
    , q_(q)
 {
-   dep_data_t dep_data = {dir, up, right};
-   dep_data_.reset(dep_data);
+   if (dep_data_)
+      dep_data_.reset();
+   dep_data_ = std::optional<dep_data_t>({ dir, up, right });
 
    set_look_at(look_at, 1);
 
-   dep_data_.get().right = normalize(cross(dep_data_.get().dir, up));
-   dep_data_.get().up    = normalize(cross(dep_data_.get().right, dep_data_.get().dir));
+   dep_data_->right = normalize(cross(dep_data_->dir, up));
+   dep_data_->up    = normalize(cross(dep_data_->right, dep_data_->dir));
 }
 
 vec3 const & camera_t::pos() const
@@ -38,37 +39,37 @@ quat const & camera_t::orientation() const
 
 void camera_t::set_dir( vec3 const & dir )
 {
-   dep_data_.get().dir = dir;
+   dep_data_->dir = dir;
 }
 
 void camera_t::set_up( vec3 const & up )
 {
-   dep_data_.get().up = up;
+   dep_data_->up = up;
 }
 
 void camera_t::set_right( vec3 const & right )
 {
-   dep_data_.get().right = right;
+   dep_data_->right = right;
 }
 
 vec3 const & camera_t::dir() const
 {
-   return dep_data_.get().dir;
+   return dep_data_->dir;
 }
 
 vec3 const & camera_t::up() const
 {
-   return dep_data_.get().up;
+   return dep_data_->up;
 }
 
 vec3 const & camera_t::right() const
 {
-   return dep_data_.get().right;
+   return dep_data_->right;
 }
 
 mat4 camera_t::world_view() const
 {
-   return lookAt(pos_, look_at_, dep_data_.get().up);
+   return glm::lookAt(pos_, look_at_, dep_data_->up);
 }
 
 void camera_t::set_pos( vec3 const & pos )
@@ -81,18 +82,18 @@ void camera_t::set_look_at( vec3 const & look_at, bool dir )
    look_at_ = look_at;
 
    if (dir)
-      dep_data_.get().dir = normalize(look_at_ - pos_);
+      dep_data_->dir = normalize(look_at_ - pos_);
 }
 
 void camera_t::set_orientation( quat const & q )
 {
-   dep_data_.get().dir = q * dep_data_.get().dir;
+   dep_data_->dir = q * dep_data_->dir;
 
-   set_look_at(pos_ + dep_data_.get().dir, 0);
+   set_look_at(pos_ + dep_data_->dir, 0);
 
-   dep_data_.get().right = q * dep_data_.get().right;
+   dep_data_->right = q * dep_data_->right;
 
-   dep_data_.get().up = q * dep_data_.get().up;
+   dep_data_->up = q * dep_data_->up;
 
    q_ = q;
 }
@@ -121,10 +122,10 @@ void fake_camera_t::update_frustum( float view_angle, float asp, float z_near, f
 
    float c = b * sin_a2;
 
-   vec3 p1 = z_near * dep_data_.get().dir + pos_ + c * dep_data_.get().up;
-   vec3 p2 = z_near * dep_data_.get().dir + pos_ - c * dep_data_.get().up;
+   vec3 p1 = z_near * dep_data_->dir + pos_ + c * dep_data_->up;
+   vec3 p2 = z_near * dep_data_->dir + pos_ - c * dep_data_->up;
 
-   vec3 tnp = asp * c * dep_data_.get().right;
+   vec3 tnp = asp * c * dep_data_->right;
 
    // near_plane quad
    frustum_coord_[0] = p2 - tnp; // bottom left
@@ -138,10 +139,10 @@ void fake_camera_t::update_frustum( float view_angle, float asp, float z_near, f
 
    c = b * sin_a2;
 
-   p1 = z_far * dep_data_.get().dir + pos_ + c * dep_data_.get().up;
-   p2 = z_far * dep_data_.get().dir + pos_ - c * dep_data_.get().up;
+   p1 = z_far * dep_data_->dir + pos_ + c * dep_data_->up;
+   p2 = z_far * dep_data_->dir + pos_ - c * dep_data_->up;
 
-   tnp = asp * c * dep_data_.get().right;
+   tnp = asp * c * dep_data_->right;
 
    // far quad
    frustum_coord_[4] = p2 + tnp;
@@ -344,9 +345,7 @@ env_t::env_t( string const & window_handle, material_manager_ptr_t material_mana
    , proj_            (mat4())
    , view_            (mat4())
    , mvp_             (mat4())
-   , debug_           (console_t(window_handle))
    , material_manager_(material_manager)
    , texture_manager_ (texture_manager)
-{
-   default_effect_ = effect_t(material_manager_->create_material_from_source(shaders::default_vs, shaders::default_fs), NULL, 0);
-}
+   , default_effect_  (material_manager_->create_material_from_source(shaders::default_vs, shaders::default_fs), NULL, 0)
+{}

@@ -10,10 +10,10 @@ namespace materials
    class material_t;
    class uniform_t;
 
-   typedef boost::intrusive_ptr<material_manager_t> material_manager_ptr_t;
-   typedef boost::shared_ptr<material_t>            material_ptr_t;
-   typedef boost::weak_ptr<material_t>              material_weak_ptr_t;
-   typedef boost::shared_ptr<uniform_t>             uniform_ptr_t;
+   typedef std::shared_ptr<material_manager_t> material_manager_ptr_t;
+   typedef std::shared_ptr<material_t>         material_ptr_t;
+   typedef std::weak_ptr<material_t>           material_weak_ptr_t;
+   typedef std::shared_ptr<uniform_t>          uniform_ptr_t;
 
 ////////////////////////////////////////
 /// exceptions
@@ -102,11 +102,9 @@ namespace materials
 ////////////////////////////////////////
 /// material_manager class
 ////////////////////////////////////////
-   class material_manager_t
+   class material_manager_t : public std::enable_shared_from_this<material_manager_t>
    {
    public:
-      DECLARE_INTRUSIVE_COUNTER(material_manager_t)
-
       material_manager_t();
       ~material_manager_t(); // Assert for zero bound material
 
@@ -222,7 +220,7 @@ namespace materials
          GLuint id_;
       };
 
-      typedef auto_ptr<shader_t> shader_auto_ptr_t;
+      typedef std::unique_ptr<shader_t> shader_auto_ptr_t;
 
       shader_auto_ptr_t create_shader( string const & source, GLenum type );
 

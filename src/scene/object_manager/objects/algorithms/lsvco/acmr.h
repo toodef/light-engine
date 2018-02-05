@@ -7,7 +7,6 @@
 #include <cassert>
 #include <algorithm>
 #include <limits>
-#include <boost/circular_buffer.hpp>
 
 namespace ls_vcache_opt
 {

@@ -15,8 +15,8 @@ namespace textures
       , TT_3D
    };
 
-   typedef shared_ptr<texture_t>            texture_ptr_t;
-   typedef intrusive_ptr<texture_manager_t> texture_manager_ptr_t;
+   typedef std::shared_ptr<texture_t>            texture_ptr_t;
+   typedef std::shared_ptr<texture_manager_t> texture_manager_ptr_t;
 
    struct texture_params
    {
@@ -38,18 +38,15 @@ namespace textures
 
    typedef texture_params tex_params_t;
 
-   class texture_manager_t
+   class texture_manager_t : public std::enable_shared_from_this<texture_manager_t>
    {
    public:
-      DECLARE_INTRUSIVE_COUNTER(texture_manager_t)
-
       texture_manager_t();
       ~texture_manager_t();
 
-      texture_ptr_t create_texture( const string & file_name, tex_params_t const & params );
-      texture_ptr_t create_texture( const string & file_name, GLenum type );
-      texture_ptr_t create_texture( const vector<string> & files_name, tex_params_t const & params );
-      texture_ptr_t create_texture( const vector<string> & files_name );
+      texture_ptr_t create_texture( tex_params_t const & params );
+      texture_ptr_t create_texture( GLenum type );
+      texture_ptr_t create_texture();
 
       void bind_texture( texture_t * texture = 0 );
 
@@ -62,15 +59,9 @@ namespace textures
    class texture_t
    {
    public:
-      DECLARE_INTRUSIVE_COUNTER(texture_t)
-
-      texture_t( string const & file_name, texture_manager_ptr_t const & manager
-                ,tex_params_t const & params );
-      texture_t( string const & file_name, texture_manager_ptr_t const & manager, GLenum type );
-
-      texture_t( vector<string> const & files_name, texture_manager_ptr_t const & manager
-                ,tex_params_t const & params );
-      texture_t( vector<string> const & files_name, texture_manager_ptr_t const & manager );
+      texture_t( texture_manager_ptr_t const & manager, tex_params_t const & params );
+      texture_t( texture_manager_ptr_t const & manager, GLenum type );
+      texture_t( texture_manager_ptr_t const & manager );
 
       ~texture_t();
 
@@ -80,15 +71,15 @@ namespace textures
 
       GLenum type() const;
 
-   private:
-      void load_2d      ( const string & file_name, tex_params_t const & params );
-      void load_2d      ( const string & file_name );
+   //private:
+   //   void load_2d      ( const string & file_name, tex_params_t const & params );
+   //   void load_2d      ( const string & file_name );
 
-      void load_cube_map( const string & file_name, tex_params_t const & params );
-      void load_cube_map( const string & file_name );
+   //   void load_cube_map( const string & file_name, tex_params_t const & params );
+   //   void load_cube_map( const string & file_name );
 
-      void load_cube_map( const vector<string> & files_names, tex_params_t const & params );
-      void load_cube_map( const vector<string> & files_names );
+   //   void load_cube_map( const vector<string> & files_names, tex_params_t const & params );
+   //   void load_cube_map( const vector<string> & files_names );
 
    private:
       texture_manager_ptr_t manager_;

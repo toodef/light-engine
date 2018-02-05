@@ -8,8 +8,6 @@
 #include <cassert>
 #include <vector>
 #include <algorithm>
-#include <boost/scoped_array.hpp>
-#include <boost/circular_buffer.hpp>
 
 #include "ls_vcache_opt.h"
 

@@ -9,8 +9,8 @@ namespace buffers
 
    using namespace materials;
 
-   typedef boost::shared_ptr<buffer_t>            buffer_ptr_t        ;
-   typedef boost::intrusive_ptr<buffer_manager_t> buffer_manager_ptr_t;
+   typedef std::shared_ptr<buffer_t>            buffer_ptr_t        ;
+   typedef std::shared_ptr<buffer_manager_t> buffer_manager_ptr_t;
    typedef vector<buffer_ptr_t>                   buffers_t           ;
 
    struct vertex_t
@@ -28,13 +28,13 @@ namespace buffers
       vec4 color_;
    };
 
-   typedef shared_ptr<vertex_t> vertex_ptr_t ;
+   typedef std::shared_ptr<vertex_t> vertex_ptr_t ;
    typedef vector<vertex_t>     vertices_t   ;
 
    class buffer_t
    {
    public:
-      buffer_t ( const buffer_manager_ptr_t & manager );
+      buffer_t ( buffer_manager_ptr_t const & manager );
       ~buffer_t();
 
       void data( vertices_t data, GLenum usage_type = GL_STATIC_DRAW );
@@ -56,11 +56,9 @@ namespace buffers
       vertices_t vertices_;
    };
 
-   class buffer_manager_t
+   class buffer_manager_t : public std::enable_shared_from_this<buffer_t>
    {
    public:
-      DECLARE_INTRUSIVE_COUNTER(buffer_manager_t)
-
       buffer_manager_t ();
       ~buffer_manager_t();
 

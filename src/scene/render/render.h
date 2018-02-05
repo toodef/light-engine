@@ -7,8 +7,19 @@ namespace render
    using namespace materials;
    using namespace textures;
 
-   typedef boost::tuple<material_ptr_t, texture_ptr_t, unsigned int> effect_t;
-   typedef vector<effect_t>                                          effects_t;
+   struct effect_t {
+      material_ptr_t material;
+      texture_ptr_t texture;
+      size_t id;
+
+      effect_t(material_ptr_t const & material, texture_ptr_t const & texture, size_t id):
+         material(material),
+         texture(texture),
+         id(id)
+      {}
+   };
+   
+   typedef std::vector<effect_t> effects_t;
 
    // primitive render style
    enum render_style_t

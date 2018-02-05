@@ -15,7 +15,7 @@ namespace object
 
    class object_t;
 
-   typedef shared_ptr<object_t> obj_ptr_t;
+   typedef std::shared_ptr<object_t> obj_ptr_t;
 
    class object_t
    {

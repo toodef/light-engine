@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "../../base.h"
 
 using namespace obj_manager;
@@ -541,8 +543,8 @@ obj_ptr_t obj_manager_t::load_model( effect_t const & effect
 
    cout << "Load """ << file_name << """ model";
 
-   filesystem::path     file   (file_name);
-   filesystem::ifstream in_file(file, std::ios::binary);
+   std::filesystem::path     file   (file_name);
+   std::filesystem::ifstream in_file(file, std::ios::binary);
 
    boost::uintmax_t     file_size = boost::filesystem::file_size(file);
 

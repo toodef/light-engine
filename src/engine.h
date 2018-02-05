@@ -10,7 +10,7 @@ namespace SE
 
    class engine_t;
 
-   typedef intrusive_ptr<engine_t> render_ptr_t;
+   typedef std::shared_ptr<engine_t> render_ptr_t;
 
    typedef vector<material_ptr_t> materials_t;
    typedef vector<texture_ptr_t>  textures_t;
@@ -32,8 +32,6 @@ namespace SE
        static engine_t & instance();
 
        void init( int argc, char ** argv, string const & window_name );
-
-       void start();
 
       /*
        * perspective transform functions
@@ -120,10 +118,9 @@ namespace SE
        * operation with texture functions
        */
 
-      texture_ptr_t create_texture( const string & file_name, tex_params_t const & params );
-      texture_ptr_t create_texture( const string & file_name, GLenum type );
-      texture_ptr_t create_texture( const vector<string> & files_names, tex_params_t const & params );
-      texture_ptr_t create_texture( const vector<string> & files_names );
+      texture_ptr_t create_texture( tex_params_t const & params );
+      texture_ptr_t create_texture( GLenum type );
+      texture_ptr_t create_texture();
 
       /*
        * operation with buffer function
@@ -165,8 +162,6 @@ namespace SE
       /*
        * other functions
        */
-
-      console_t debug_bar() const;
 
       void draw_frame ();
 

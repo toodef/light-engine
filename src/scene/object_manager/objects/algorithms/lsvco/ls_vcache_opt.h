@@ -9,7 +9,6 @@
 #include <cassert>
 #include <limits>
 #include <vector>
-#include <boost/scoped_array.hpp>
 
 namespace ls_vcache_opt
 {
@@ -46,7 +45,7 @@ namespace ls_vcache_opt
    // reorder vertices for more linear access while rendering
    template<typename t_index, typename t_vertex>
    t_index reorder_vertices( t_index * indices, unsigned num_tris, 
-      boost::scoped_array<t_vertex> & vertices, unsigned num_verts )
+      std::unique_ptr<t_vertex> & vertices, unsigned num_verts )
    {
       assert( num_verts <= std::numeric_limits<t_index>::max() );
       boost::scoped_array<t_vertex> new_verts( new t_vertex[num_verts] );
