@@ -79,15 +79,15 @@ namespace ls_vcache_opt
       assert( num_verts != 0 );
       assert( num_verts <= std::numeric_limits<t_index>::max() );
 
-      boost::scoped_array<tri_data<t_index> > tris( new tri_data<t_index>[num_tris] );
-      boost::scoped_array<vertex_data<t_index> > verts( new vertex_data<t_index>[num_verts] );
+      std::vector<tri_data<t_index>> tris(num_tris);
+      std::vector<vertex_data<t_index>> verts(num_verts);
 
       unsigned best_tri = 0;
 
       /// initialization
       {
          t_index const * idx = indices;
-         tri_data<t_index> * tri = tris.get();
+         tri_data<t_index> * tri = tris.data();
          for( unsigned tri_index = 0; tri_index != num_tris; ++tri, ++tri_index, idx += 3 )
          {
             tri->indices_[0] = idx[0];
@@ -100,11 +100,11 @@ namespace ls_vcache_opt
             verts[idx[2]].tris_.push_back( tri_index );
          }
 
-         for( vertex_data<t_index> * vert = verts.get(), * end = verts.get() + num_verts; 
+         for( vertex_data<t_index> * vert = verts.data(), * end = verts.data() + num_verts; 
             vert != end; vert++ )
             vert->score_ = vertex_score( *vert );
 
-         tri = tris.get();
+         tri = tris.data();
          short max_score = -1;
          for( unsigned tri_index = 0; tri_index != num_tris; tri++, tri_index++ )
          {
@@ -121,100 +121,100 @@ namespace ls_vcache_opt
       }
 
       /// main body of the algorithm
-      {
-         unsigned tris_left = num_tris;
-         boost::circular_buffer<t_index> vcache( vcache_size + 3 );
+      //{
+      //   unsigned tris_left = num_tris;
+      //   boost::circular_buffer<t_index> vcache( vcache_size + 3 );
 
-         while( tris_left-- )
-         {
-            /// add triangle to output list
-            {
-               tri_data<t_index> & tri = tris[best_tri];
-               indices[0] = tri.indices_[0];
-               indices[1] = tri.indices_[1];
-               indices[2] = tri.indices_[2];
-               indices += 3;
-               tri.added_ = true;
+      //   while( tris_left-- )
+      //   {
+      //      /// add triangle to output list
+      //      {
+      //         tri_data<t_index> & tri = tris[best_tri];
+      //         indices[0] = tri.indices_[0];
+      //         indices[1] = tri.indices_[1];
+      //         indices[2] = tri.indices_[2];
+      //         indices += 3;
+      //         tri.added_ = true;
 
-               /// reduce valence of used verts
-               for( t_index const * idx = tri.indices_; 
-                  idx != tri.indices_ + 3; ++idx )
-               {
-                  vertex_data<t_index> & vert = verts[*idx];
-                  vert.tris_.erase( 
-                     std::find( vert.tris_.begin(), vert.tris_.end(), best_tri ) );
+      //         /// reduce valence of used verts
+      //         for( t_index const * idx = tri.indices_; 
+      //            idx != tri.indices_ + 3; ++idx )
+      //         {
+      //            vertex_data<t_index> & vert = verts[*idx];
+      //            vert.tris_.erase( 
+      //               std::find( vert.tris_.begin(), vert.tris_.end(), best_tri ) );
 
-                  typename boost::circular_buffer<t_index>::iterator in_cache =
-                     std::find( vcache.begin(), vcache.end(), *idx );
-                  if( in_cache != vcache.end() )
-                     vcache.erase( in_cache );   // TODO try rerase if closer to begin
-               }
+      //            typename boost::circular_buffer<t_index>::iterator in_cache =
+      //               std::find( vcache.begin(), vcache.end(), *idx );
+      //            if( in_cache != vcache.end() )
+      //               vcache.erase( in_cache );   // TODO try erase if closer to begin
+      //         }
 
-               vcache.push_back( tri.indices_[0] );
-               vcache.push_back( tri.indices_[1] );
-               vcache.push_back( tri.indices_[2] );
-            }
+      //         vcache.push_back( tri.indices_[0] );
+      //         vcache.push_back( tri.indices_[1] );
+      //         vcache.push_back( tri.indices_[2] );
+      //      }
 
-            /// update cache pos and score of verts in cache
-            {
-               short cache_pos = vcache.size() - 1;
-               for( typename boost::circular_buffer<t_index>::iterator i = vcache.begin(),
-                  vcache_end = vcache.end(); 
-                  i != vcache_end; ++i, --cache_pos )
-               {
-                  vertex_data<t_index> & vert = verts[*i];
-                  vert.cache_pos_ = cache_pos >= vcache_size ? -1 : cache_pos;
-                  vert.score_ = vertex_score( vert );
-               }
-            }
+      //      /// update cache pos and score of verts in cache
+      //      {
+      //         short cache_pos = vcache.size() - 1;
+      //         for( typename boost::circular_buffer<t_index>::iterator i = vcache.begin(),
+      //            vcache_end = vcache.end(); 
+      //            i != vcache_end; ++i, --cache_pos )
+      //         {
+      //            vertex_data<t_index> & vert = verts[*i];
+      //            vert.cache_pos_ = cache_pos >= vcache_size ? -1 : cache_pos;
+      //            vert.score_ = vertex_score( vert );
+      //         }
+      //      }
 
-            /// update tris score and look for best tri
-            {
-               short max_score = -1;
-               for( typename boost::circular_buffer<t_index>::iterator i = vcache.begin(),
-                  vcache_end = vcache.end(); 
-                  i != vcache_end; ++i )
-               {
-                  vertex_data<t_index> & vert = verts[*i];
-                  for( std::vector<unsigned>::iterator itri = vert.tris_.begin(),
-                     tris_end = vert.tris_.end(); 
-                     itri != tris_end; ++itri )
-                  {
-                     tri_data<t_index> & tri = tris[*itri];
-                     assert( !tri.added_ );
+      //      /// update tris score and look for best tri
+      //      {
+      //         short max_score = -1;
+      //         for( typename boost::circular_buffer<t_index>::iterator i = vcache.begin(),
+      //            vcache_end = vcache.end(); 
+      //            i != vcache_end; ++i )
+      //         {
+      //            vertex_data<t_index> & vert = verts[*i];
+      //            for( std::vector<unsigned>::iterator itri = vert.tris_.begin(),
+      //               tris_end = vert.tris_.end(); 
+      //               itri != tris_end; ++itri )
+      //            {
+      //               tri_data<t_index> & tri = tris[*itri];
+      //               assert( !tri.added_ );
 
-                     tri.score_ = verts[tri.indices_[0]].score_
-                        + verts[tri.indices_[1]].score_
-                        + verts[tri.indices_[2]].score_;
+      //               tri.score_ = verts[tri.indices_[0]].score_
+      //                  + verts[tri.indices_[1]].score_
+      //                  + verts[tri.indices_[2]].score_;
 
-                     if( tri.score_ > max_score )
-                     {
-                        max_score = tri.score_;
-                        best_tri = *itri;
-                     }
-                  }
-               }
+      //               if( tri.score_ > max_score )
+      //               {
+      //                  max_score = tri.score_;
+      //                  best_tri = *itri;
+      //               }
+      //            }
+      //         }
 
-               if( max_score == -1 )
-               {
-                  /// best tri not found
-                  /// cache didn't hold verts with non-added tris
-                  tri_data<t_index> * tri = tris.get();
-                  for( unsigned tri_index = 0; tri_index != num_tris; tri++, tri_index++ )
-                  {
-                     if( !tri->added_ && tri->score_ > max_score )
-                     {
-                        max_score = tri->score_;
-                        best_tri = tri_index;
-                     }
-                  }
-               }
-            }
+      //         if( max_score == -1 )
+      //         {
+      //            /// best tri not found
+      //            /// cache didn't hold verts with non-added tris
+      //            tri_data<t_index> * tri = tris.get();
+      //            for( unsigned tri_index = 0; tri_index != num_tris; tri++, tri_index++ )
+      //            {
+      //               if( !tri->added_ && tri->score_ > max_score )
+      //               {
+      //                  max_score = tri->score_;
+      //                  best_tri = tri_index;
+      //               }
+      //            }
+      //         }
+      //      }
 
-            if( vcache.size() > vcache_size )
-               vcache.rresize( vcache_size );
-         }
-      }
+      //      if( vcache.size() > vcache_size )
+      //         vcache.rresize( vcache_size );
+      //   }
+      //}
    }
 
    /// explicit instantiation - only two index types are possible

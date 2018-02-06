@@ -538,90 +538,94 @@ obj_ptr_t obj_manager_t::load_model( effect_t const & effect
                                     ,render_param_t const & render_param, const string & file_name
                                     ,vec4 color, vec3 pos, float size )
 {
-   buffers_t     new_obj;
-   idx_buffers_t index_buffers;
+   // TODO add load obj file realisation
 
-   cout << "Load """ << file_name << """ model";
+   //buffers_t     new_obj;
+   //idx_buffers_t index_buffers;
 
-   std::filesystem::path     file   (file_name);
-   std::filesystem::ifstream in_file(file, std::ios::binary);
+   //cout << "Load """ << file_name << """ model";
 
-   boost::uintmax_t     file_size = boost::filesystem::file_size(file);
+   //std::experimental::filesystem::path     file(file_name);
+   //std::ifstream in_file(file, std::ios::binary);
 
-   scoped_array<GLchar> text(new GLchar[file_size + 1]);
+   //size_t file_size = std::experimental::filesystem::file_size(file);
 
-   in_file.read(text.get(), file_size);
-   text[file_size] = 0;
+   //std::vector<GLchar> text(file_size + 1);
 
-   Assimp::Importer import;
+   //in_file.read(text.data(), file_size);
+   //text[file_size] = 0;
 
-   char postprocess_params = 0;
+   //Assimp::Importer import;
 
-   if (render_param.drawing_style == DS_triangles)
-      postprocess_params |= aiProcess_Triangulate | aiProcess_GenSmoothNormals;
+   //char postprocess_params = 0;
 
-   if (effect.get<1>() && (render_param.texture_type == TT_none))
-      postprocess_params |= aiProcess_FlipUVs;
+   //if (render_param.drawing_style == DS_triangles)
+   //   postprocess_params |= aiProcess_Triangulate | aiProcess_GenSmoothNormals;
 
-   const aiScene * obj = import.ReadFileFromMemory(text.get(), file_size, postprocess_params);
+   //if (effect.get<1>() && (render_param.texture_type == TT_none))
+   //   postprocess_params |= aiProcess_FlipUVs;
 
-   if (obj)
-   {
-      vertex_t v;
+   //const aiScene * obj = import.ReadFileFromMemory(text.get(), file_size, postprocess_params);
 
-      v.color_ = color;
+   //if (obj)
+   //{
+   //   vertex_t v;
 
-      for (size_t i = 0; i < obj->mNumMeshes; ++i)
-      {
-         vertices_t mesh;
+   //   v.color_ = color;
 
-         for (size_t j = 0; j < obj->mMeshes[i]->mNumVertices; ++j)
-         {
-            v.vertex_ = vec3(obj->mMeshes[i]->mVertices[j].x, obj->mMeshes[i]->mVertices[j].y
-               ,obj->mMeshes[i]->mVertices[j].z) * size + pos;
+   //   for (size_t i = 0; i < obj->mNumMeshes; ++i)
+   //   {
+   //      vertices_t mesh;
 
-            if (obj->mMeshes[i]->HasNormals())
-               v.normal_ = vec3(obj->mMeshes[i]->mNormals[j].x, obj->mMeshes[i]->mNormals[j].y
-               ,obj->mMeshes[i]->mNormals[j].z);
+   //      for (size_t j = 0; j < obj->mMeshes[i]->mNumVertices; ++j)
+   //      {
+   //         v.vertex_ = vec3(obj->mMeshes[i]->mVertices[j].x, obj->mMeshes[i]->mVertices[j].y
+   //            ,obj->mMeshes[i]->mVertices[j].z) * size + pos;
 
-            if (obj->mMeshes[i]->HasTextureCoords(0))
-               v.tex_coord_ = vec3(obj->mMeshes[i]->mTextureCoords[0][j].x, obj->mMeshes[i]->mTextureCoords[0][j].y
-               ,obj->mMeshes[i]->mTextureCoords[0][j].z);
+   //         if (obj->mMeshes[i]->HasNormals())
+   //            v.normal_ = vec3(obj->mMeshes[i]->mNormals[j].x, obj->mMeshes[i]->mNormals[j].y
+   //            ,obj->mMeshes[i]->mNormals[j].z);
 
-            mesh.push_back(v);
-         }
+   //         if (obj->mMeshes[i]->HasTextureCoords(0))
+   //            v.tex_coord_ = vec3(obj->mMeshes[i]->mTextureCoords[0][j].x, obj->mMeshes[i]->mTextureCoords[0][j].y
+   //            ,obj->mMeshes[i]->mTextureCoords[0][j].z);
 
-         buffer_ptr_t buffer = buffer_manager->create_buffer(mesh);
+   //         mesh.push_back(v);
+   //      }
 
-         new_obj.push_back(buffer);
+   //      buffer_ptr_t buffer = buffer_manager->create_buffer(mesh);
 
-         if (render_param.with_idx_buffer)
-         {
-            idx_buffer_t index_buffer;
+   //      new_obj.push_back(buffer);
 
-            for (size_t j = 0; j < obj->mMeshes[i]->mNumFaces; ++j)
-            {
-               index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[0]);
-               index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[1]);
-               index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[2]);
-            }
+   //      if (render_param.with_idx_buffer)
+   //      {
+   //         idx_buffer_t index_buffer;
 
-            index_buffers.push_back(index_buffer);
-         }
-      }
+   //         for (size_t j = 0; j < obj->mMeshes[i]->mNumFaces; ++j)
+   //         {
+   //            index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[0]);
+   //            index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[1]);
+   //            index_buffer.push_back(obj->mMeshes[i]->mFaces[j].mIndices[2]);
+   //         }
 
-      cout << " -complete" << endl;
+   //         index_buffers.push_back(index_buffer);
+   //      }
+   //   }
 
-      if (render_param.with_idx_buffer)
-         return obj_ptr_t(new object_t(effect, new_obj, render_param, pos, color, size, index_buffers));
+   //   cout << " -complete" << endl;
 
-      return obj_ptr_t(new object_t(effect, new_obj, render_param, pos, color, size));
-   }
-   else
-   {
-      cout << " -error!" << endl;
+   //   if (render_param.with_idx_buffer)
+   //      return obj_ptr_t(new object_t(effect, new_obj, render_param, pos, color, size, index_buffers));
 
-      return obj_ptr_t();
-   }
+   //   return obj_ptr_t(new object_t(effect, new_obj, render_param, pos, color, size));
+   //}
+   //else
+   //{
+   //   cout << " -error!" << endl;
+
+   //   return obj_ptr_t();
+   //}
+
+   return obj_ptr_t();
 }
 

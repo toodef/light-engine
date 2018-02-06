@@ -398,13 +398,13 @@ void material_t::load_material_from_source( string const & vertex_shader_src, st
    is_init_ = true;
 }
 
-char * load_file( string const & file_name )
+std::string load_file( string const & file_name )
 {
-   std::filesystem::path file(file_name);
+   std::experimental::filesystem::path file(file_name);
 
-   std::filesystem::ifstream in_file(file, std::ios::binary);
+   std::ifstream in_file(file, std::ios::binary);
 
-   size_t size = boost::filesystem::file_size(file);
+   size_t size = std::experimental::filesystem::file_size(file);
 
    GLchar * source(new GLchar[size + 1]);
 
@@ -412,7 +412,7 @@ char * load_file( string const & file_name )
 
    source[size] = 0;
 
-   return source;
+   return std::string(source);
 }
 
 void material_t::load_material_from_file( string const & vertex_shader_file, string const & fragment_shader_file,
@@ -425,19 +425,19 @@ void material_t::load_material_from_file( string const & vertex_shader_file, str
       return;
    }
 
-   scoped_array<GLchar> vs_source(load_file(vertex_shader_file));
-   scoped_array<GLchar> fs_source(load_file(fragment_shader_file));
+   std::string vs_source(load_file(vertex_shader_file));
+   std::string fs_source(load_file(fragment_shader_file));
 
    if (geometry_shader_file == "")
    {
-      load_material_from_source(vs_source.get(), fs_source.get());
+      load_material_from_source(vs_source, fs_source);
 
       return;
    }
 
-   scoped_array<GLchar> gs_source(load_file(geometry_shader_file));
+   std::string gs_source(load_file(geometry_shader_file));
 
-   load_material_from_source(vs_source.get(), fs_source.get(), gs_source.get());
+   load_material_from_source(vs_source, fs_source, gs_source);
 }
 
 uniform_ptr_t & material_t::new_uniform( string const & name )

@@ -25,8 +25,7 @@ namespace environment
 
       template<typename T> T time()
       {
-         std::chrono::duration<T> res = chrono::system_clock::now() - start_time_;
-         return res.count();
+         return (std::chrono::system_clock::now() - start_time_).count();
       }
 
       template<typename T> T time_msec()

@@ -29,7 +29,7 @@ set(HEADER_FILES
         scene/scene.h
         engine.h)
 
-find_package(OpenGL)
+find_package(OpenGL REQUIRED)
 
 if (DEFINED ENV{GLM_ROOT})
    set(GLM_ROOT $ENV{GLM_ROOT})
@@ -45,10 +45,11 @@ endif()
 
 include_directories(${GLM_ROOT})
 include_directories(${GLEW_ROOT}/include)
+link_directories(${GLEW_ROOT}/lib/Release/x64)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} GL GLEW)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
 install ( DIRECTORY src/ DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")

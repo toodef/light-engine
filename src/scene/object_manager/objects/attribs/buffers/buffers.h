@@ -9,9 +9,9 @@ namespace buffers
 
    using namespace materials;
 
-   typedef std::shared_ptr<buffer_t>            buffer_ptr_t        ;
+   typedef std::shared_ptr<buffer_t>         buffer_ptr_t        ;
    typedef std::shared_ptr<buffer_manager_t> buffer_manager_ptr_t;
-   typedef vector<buffer_ptr_t>                   buffers_t           ;
+   typedef vector<buffer_ptr_t>              buffers_t           ;
 
    struct vertex_t
    {
@@ -56,7 +56,7 @@ namespace buffers
       vertices_t vertices_;
    };
 
-   class buffer_manager_t : public std::enable_shared_from_this<buffer_t>
+   class buffer_manager_t : public std::enable_shared_from_this<buffer_manager_t>
    {
    public:
       buffer_manager_t ();
