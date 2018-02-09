@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base.h"
+#include "../src/base.h"
 
 namespace SE
 {
@@ -147,16 +147,7 @@ namespace SE
         */
 
        typedef void (* on_display_fnc_t)();
-
-       void set_on_reshape     ();
-       void set_on_display     ( on_display_fnc_t on_display_fnc );
-       void set_on_keyboard    ();
-       void set_on_keyboard_up ();
-       void set_on_close       ();
-       void set_on_mouse       ();
-       void set_on_mouse_motion();
-       void set_on_mouse_wheel ();
-
+       void set_on_display(on_display_fnc_t on_display_fnc);
        void on_display();
 
       /*

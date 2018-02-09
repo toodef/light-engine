@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(simple-engine)
+project(light-engine)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -27,28 +27,10 @@ set(HEADER_FILES
         scene/object_manager/object_manager.h
         scene/render/render.h
         scene/scene.h
-        engine.h)
+        ../include/engine.h)
 
-find_package(OpenGL REQUIRED)
-
-if (DEFINED ENV{GLM_ROOT})
-   set(GLM_ROOT $ENV{GLM_ROOT})
-elseif()
-   message(FATAL_ERROR "Please set GLM_ROOT environment variable")
-endif()
-
-if (DEFINED ENV{GLEW_ROOT})
-   set(GLEW_ROOT $ENV{GLEW_ROOT})
-elseif()
-   message(FATAL_ERROR "Please set GLEW_ROOT environment variable")
-endif()
-
-include_directories(${GLM_ROOT})
-include_directories(${GLEW_ROOT}/include)
-link_directories(${GLEW_ROOT}/lib/Release/x64)
-
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
-
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC ../include)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})

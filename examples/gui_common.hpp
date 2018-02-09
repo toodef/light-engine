@@ -1,8 +1,11 @@
 #pragma once
 
+#include <GL/glut.h>
+#include <engine.h>
+
 // Gui common tools
 
-void reshape_func(int w, int h)
+void resize_func(int w, int h)
 {
    if (w < 10)
       w = 10;
@@ -12,10 +15,10 @@ void reshape_func(int w, int h)
 
    glViewport(0, 0, w, h);
 
-   engine.set_width(w);
-   engine.set_height(h);
+   SE::engine.set_width(w);
+   SE::engine.set_height(h);
 
-   engine.update_proj();
+   SE::engine.update_proj();
 }
 
 bool key_buf[256] = { 0 };
@@ -36,42 +39,42 @@ void keyboard_process()
    {
    case true:
       if (key_buf['w'])
-         engine.move_camera(0.1f, CW_front);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_front);
 
       if (key_buf['a'])
-         engine.move_camera(0.1f, CW_left);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_left);
 
       if (key_buf['s'])
-         engine.move_camera(0.1f, CW_back);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_back);
 
       if (key_buf['d'])
-         engine.move_camera(0.1f, CW_right);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_right);
 
       if (key_buf['q'])
-         engine.move_camera(0.1f, CW_down);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_down);
 
       if (key_buf['e'])
-         engine.move_camera(0.1f, CW_up);
+         SE::engine.move_camera(0.1f, SE::camera_way_t::CW_up);
       break;
 
    case false:
       if (key_buf['w'])
-         engine.move_fake_camera(0.1f, CW_front);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_front);
 
       if (key_buf['a'])
-         engine.move_fake_camera(0.1f, CW_left);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_left);
 
       if (key_buf['s'])
-         engine.move_fake_camera(0.1f, CW_back);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_back);
 
       if (key_buf['d'])
-         engine.move_fake_camera(0.1f, CW_right);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_right);
 
       if (key_buf['q'])
-         engine.move_fake_camera(0.1f, CW_down);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_down);
 
       if (key_buf['e'])
-         engine.move_fake_camera(0.1f, CW_up);
+         SE::engine.move_fake_camera(0.1f, SE::camera_way_t::CW_up);
       break;
    }
 }
@@ -87,9 +90,9 @@ void keyboard_func(unsigned char button, int x, int y)
       bool tmp = is_standart_cam;
 
       if (is_standart_cam)
-         engine.enable_fake_cam(true);
+         SE::engine.enable_fake_cam(true);
       else
-         engine.enable_fake_cam(false);
+         SE::engine.enable_fake_cam(false);
 
       is_standart_cam = old_cam;
       old_cam = tmp;
@@ -100,10 +103,10 @@ void keyboard_up(unsigned char button, int x, int y)
 {
    if (button == 'f')
    {
-      if (engine.frustum_state())
-         engine.draw_frustum(false);
+      if (SE::engine.frustum_state())
+         SE::engine.draw_frustum(false);
       else
-         engine.draw_frustum(true);
+         SE::engine.draw_frustum(true);
    }
 
    key_buf[button] = 0;
@@ -121,10 +124,10 @@ void mouse_func(int x, int y)
       switch (is_standart_cam)
       {
       case true:
-         engine.rotate_camera((float)(old_x - x) / 200.f, (float)(old_y - y) / 200.f);
+         SE::engine.rotate_camera((float)(old_x - x) / 200.f, (float)(old_y - y) / 200.f);
          break;
       case false:
-         engine.rotate_fake_cam((float)(old_x - x) / 200.f, (float)(old_y - y) / 200.f);
+         SE::engine.rotate_fake_cam((float)(old_x - x) / 200.f, (float)(old_y - y) / 200.f);
          break;
       }
 
@@ -135,20 +138,41 @@ void mouse_func(int x, int y)
 
 void mouse_wheel_func(int whell, int direction, int x, int y)
 {
-   float new_va = engine.view_angle() - direction;
+   float new_va = SE::engine.view_angle() - direction;
 
    if (new_va > 0 && new_va < 180)
-      engine.set_fake_cam_va(new_va);
+      SE::engine.set_fake_cam_va(new_va);
 }
 
 void display_func()
 {
    keyboard_process();
 
-   engine.on_display();
+   SE::engine.on_display();
 
    glutSwapBuffers();
    glutPostRedisplay();
+}
+
+void reshape_func(int w, int h) {
+   SE::engine.set_width(w);
+   SE::engine.set_height(h);
+   SE::engine.draw_frame();
+}
+
+void mouse(int button, int state, int x, int y)
+{
+   if (button == GLUT_LEFT_BUTTON)
+   {
+      old_x = x;
+      old_y = y;
+
+      is_rot = 1;
+   }
+   else
+      is_rot = 0;
+
+   is_debug = 0;
 }
 
 class examples_gui_t {
@@ -160,20 +184,20 @@ public:
 
       glutInitWindowSize(800, 700);
       glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-      glutInitContextVersion(4, 2);
-      glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-      glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
+      //glutInitContextVersion(4, 2);
+      //glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
+      //glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 
-      glutCreateWindow(window_name.c_str());
+      glutCreateWindow("Sample");
 
       glutReshapeFunc(reshape_func);
       glutDisplayFunc(display_func);
       glutKeyboardFunc(keyboard_func);
       glutKeyboardUpFunc(keyboard_up);
-      glutCloseFunc(close_func);
+      //glutCloseFunc(close_func);
       glutMouseFunc(mouse);
       glutMotionFunc(mouse_func);
-      glutMouseWheelFunc(mouse_wheel_func);
+      //glutMouseWheelFunc(mouse_wheel_func);
    }
 
    void start()
@@ -187,42 +211,7 @@ public:
       }
    }
 
-   void keyboard_func(unsigned char button, int x, int y)
-   {
-      key_buf[button] = 1;
-
-      static bool old_cam = false;
-
-      if (button == 9)
-      {
-         bool tmp = is_standart_cam_;
-
-         if (is_standart_cam_)
-            engine.enable_fake_cam(true);
-         else
-            engine.enable_fake_cam(false);
-
-         is_standart_cam = old_cam;
-         old_cam = tmp;
-      }
-   }
-
-   void mouse(int button, int state, int x, int y)
-   {
-      if (button == GLUT_LEFT_BUTTON)
-      {
-         old_x = x;
-         old_y = y;
-
-         is_rot = 1;
-      }
-      else
-         is_rot = 0;
-
-      is_debug = 0;
-   }
-
 private:
    bool key_buf[256] = { 0 };
-   is_standart_cam_;
+   bool is_standart_cam_;
 };
