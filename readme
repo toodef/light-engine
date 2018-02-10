@@ -1,11 +1,6 @@
-Simple visualiser 3D engine.
+Simple 3D engine.
 
 Dependencies:
 - OpenGL 4.2
-- FreeGLUT 2.8.1
 - GLM
 - Glew 1.10.0
-- Boost
-- AntTweakBar
-- GraphicsMagick 1.3.16
-- Assimp

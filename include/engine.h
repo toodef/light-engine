@@ -134,7 +134,7 @@ namespace SE
 
       material_manager_ptr_t get_material_manager() const;
       texture_manager_ptr_t  get_texture_manager () const;
-      buffer_manager_t  * get_buffer_manager  () const;
+      buffer_manager_ptr_t  get_buffer_manager  () const;
 
       /*
        *timer function

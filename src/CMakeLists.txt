@@ -29,7 +29,7 @@ set(HEADER_FILES
         scene/scene.h
         ../include/engine.h)
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})
+add_library(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ../include)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32)
 

@@ -348,9 +348,9 @@ texture_manager_ptr_t engine_t::get_texture_manager() const
    return texture_manager_;
 }
 
-buffer_manager_t * engine_t::get_buffer_manager() const
+buffer_manager_ptr_t engine_t::get_buffer_manager() const
 {
-   return buffer_manager_.get();
+   return buffer_manager_;
 }
 
 void engine_t::set_width( int width )

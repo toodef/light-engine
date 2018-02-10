@@ -177,8 +177,7 @@ void mouse(int button, int state, int x, int y)
 
 class examples_gui_t {
 public:
-   examples_gui_t(int argc, char ** argv) :
-      is_standart_cam_(true)
+   examples_gui_t(int argc, char ** argv)
    {
       glutInit(&argc, argv);
 
@@ -210,8 +209,4 @@ public:
          return;
       }
    }
-
-private:
-   bool key_buf[256] = { 0 };
-   bool is_standart_cam_;
 };

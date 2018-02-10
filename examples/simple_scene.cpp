@@ -11,6 +11,8 @@ void display_func_my()
 
 int main( int argc, char ** argv )
 {
+   examples_gui_t gui(argc, argv);
+   
    engine.init(argc, argv, "Default scene");
 
    engine.set_on_display(display_func_my);
@@ -30,7 +32,7 @@ int main( int argc, char ** argv )
    engine.static_scene().push(
          obj_manager_t::create_plane(engine.default_effect(), SE::engine.get_buffer_manager(), 1.0f, 1.0f, 40));
 
-   //engine.start();
+   gui.start();
 
    return 0;
 }
