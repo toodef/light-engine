@@ -347,5 +347,5 @@ env_t::env_t( string const & window_handle, material_manager_ptr_t material_mana
    , mvp_             (mat4())
    , material_manager_(material_manager)
    , texture_manager_ (texture_manager)
-   , default_effect_  (material_manager_->create_material_from_source(shaders::default_vs, shaders::default_fs), NULL, 0)
+   , default_effect_  (material_manager->create_material_from_source(shaders::default_vs, shaders::default_fs), NULL, 0)
 {}
