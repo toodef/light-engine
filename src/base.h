@@ -35,9 +35,6 @@ namespace environment
    typedef std::shared_ptr<env_t> env_ptr_t;
 }
 
-typedef std::shared_ptr<GLint>  int_ptr_t ;
-typedef std::shared_ptr<GLchar> char_ptr_t;
-
 #include "scene/object_manager/objects/attribs/textures/textures.h"
 #include "scene/object_manager/objects/attribs/materials/materials.h"
 #include "scene/object_manager/objects/attribs/buffers/buffers.h"

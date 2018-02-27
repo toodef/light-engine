@@ -55,8 +55,6 @@ namespace obj_manager
                                   ,buffer_manager_ptr_t const & buffer_manager
                                   ,render_param_t const & render_param, const string & file_name, vec4 color
                                   ,vec3 pos = vec3(), float size = 1.0f );
-
-   private:
    };
 
 }

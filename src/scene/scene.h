@@ -15,21 +15,11 @@ namespace scene
       scene_t ();
       ~scene_t();
 
-      // push back one object
       void push( obj_ptr_t const & new_object );
-
-      // push back few objects
       void push( objects_t const & scene_part );
-
-      // pop one object from end of scene
       void pop( size_t count = 1 );
-
-      // erase part of scene
-      void erase_scene( scene_iter_t const & from, scene_iter_t const & to );
-
-      // clear scene
+      void erase( scene_iter_t const & from, scene_iter_t const & to );
       void clear();
-
       size_t size() const;
 
       // draw all objects
@@ -45,7 +35,6 @@ namespace scene
       void      operator << ( obj_ptr_t const & new_object );
 
    private:
-
       objects_t objects_;
    };
 }
