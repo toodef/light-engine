@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES
         environment/environment.cpp
-        scene/object_manager/objects/algorithms/lsvco/ls_vcache_opt.cpp
         scene/object_manager/objects/attribs/buffers/buffers.cpp
         scene/object_manager/objects/attribs/materials/materials.cpp
         scene/object_manager/objects/attribs/textures/textures.cpp
@@ -18,8 +17,6 @@ set(SOURCE_FILES
 set(HEADER_FILES
         base.h
         environment/environment.h
-        scene/object_manager/objects/algorithms/lsvco/acmr.h
-        scene/object_manager/objects/algorithms/lsvco/ls_vcache_opt.h
         scene/object_manager/objects/attribs/buffers/buffers.h
         scene/object_manager/objects/attribs/materials/materials.h
         scene/object_manager/objects/attribs/textures/textures.h

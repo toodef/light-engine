@@ -254,36 +254,29 @@ obj_ptr_t obj_manager_t::create_sphere( effect_t const & effect
                                        ,vec4 color, size_t detail_level, vec3 pos
                                        ,float size, texture_type_t texture_type )
 {
-   vertices_t     new_sphere;
-   vector<size_t> end_index_data;
-   vector<size_t> index_data;
+   vector<size_t> end_index_data({ 0 , 4 , 1 ,
+                                   0 , 9 , 4 ,
+                                   9 , 5 , 4 ,
+                                   4 , 5 , 8 ,
+                                   4 , 8 , 1 ,
+                                   8 , 10, 1 ,
+                                   8 , 3 , 10,
+                                   5 , 3 , 8 ,
+                                   5 , 2 , 3 ,
+                                   2 , 7 , 3 ,
+                                   7 , 10, 3 ,
+                                   7 , 6 , 10,
+                                   7 , 11, 6 ,
+                                   11, 0 , 6 ,
+                                   0 , 1 , 6 ,
+                                   6 , 1 , 10,
+                                   9 , 0 , 11,
+                                   9 , 11, 2 ,
+                                   9 , 2 , 5 ,
+                                   7 , 2 , 11 });
 
-   int index[60] = { 0 , 4 , 1 ,
-                     0 , 9 , 4 ,
-                     9 , 5 , 4 ,
-                     4 , 5 , 8 ,
-                     4 , 8 , 1 ,
-                     8 , 10, 1 ,
-                     8 , 3 , 10,
-                     5 , 3 , 8 ,
-                     5 , 2 , 3 ,
-                     2 , 7 , 3 ,
-                     7 , 10, 3 ,
-                     7 , 6 , 10,
-                     7 , 11, 6 ,
-                     11, 0 , 6 ,
-                     0 , 1 , 6 ,
-                     6 , 1 , 10,
-                     9 , 0 , 11,
-                     9 , 11, 2 ,
-                     9 , 2 , 5 ,
-                     7 , 2 , 11 };
-
-   for (int i = 0; i < 60; ++i)
-      end_index_data.push_back(index[i]);
-
-   float x = 0.525731112119133606f;
-   float z = 0.850650808352039932f;
+   const float x = 0.525731112119133606f;
+   const float z = 0.850650808352039932f;
 
    vertex_t v0 ;
    vertex_t v1 ;
@@ -311,6 +304,7 @@ obj_ptr_t obj_manager_t::create_sphere( effect_t const & effect
    v10.vertex_ = normalize(vec3( z, -x,  0)) * size;
    v11.vertex_ = normalize(vec3(-z, -x,  0)) * size;
 
+   vertices_t new_sphere;
    new_sphere.push_back(v0 );
    new_sphere.push_back(v1 );
    new_sphere.push_back(v2 );
@@ -323,6 +317,8 @@ obj_ptr_t obj_manager_t::create_sphere( effect_t const & effect
    new_sphere.push_back(v9 );
    new_sphere.push_back(v10);
    new_sphere.push_back(v11);
+
+   vector<size_t> index_data;
 
    for (size_t n = 0; n < detail_level - 1; ++n)
    {
@@ -376,11 +372,6 @@ obj_ptr_t obj_manager_t::create_sphere( effect_t const & effect
       new_sphere[i].vertex_ += pos;
    }
 
-   // cache optimization
-//   ls_vcache_opt::optimize(&end_index_data[0], end_index_data.size() / 3, new_sphere.size());
-//   size_t num_verts = ls_vcache_opt::reorder_vertices(&end_index_data[0], end_index_data.size() / 3, new_sphere);
-//   new_sphere.resize(num_verts);
-
    render_param_t render_par;
 
    if (color.w < 1.0f)
@@ -389,7 +380,7 @@ obj_ptr_t obj_manager_t::create_sphere( effect_t const & effect
       render_par.with_alpha = 0;
 
    render_par.is_wireframe    = 1;
-   render_par.with_idx_buffer = 0;
+   render_par.with_idx_buffer = 1;
    render_par.drawing_style   = DS_quads;
    render_par.texture_type    = texture_type;
 

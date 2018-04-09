@@ -16,7 +16,7 @@ namespace buffers
    struct vertex_t
    {
       vertex_t( vec3 vertex = vec3(), vec3 normal = vec3(), vec3 tex_coord = vec3(), vec4 color = vec4() ) :
-            vertex_   (vertex)
+              vertex_   (vertex)
             , normal_   (normal)
             , tex_coord_(tex_coord)
             , color_    (color)

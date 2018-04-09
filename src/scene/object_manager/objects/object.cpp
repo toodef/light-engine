@@ -71,78 +71,11 @@ void disable_vertex_attrib()
 
 void object_t::draw( env_ptr_t const & env )
 {
-   static float scale_val = 715.0f;
-
    if (material_->is_init_)
       env->material_manager_->bind_material(material_.get());
 
-
-   // TODO: add support to manual add uniforms to object (if doesn't exist) or disable console output of unused uniform variables
-   uniform_ptr_t m_mvp       = material_->uniform("m_mvp"      );
-//   uniform_ptr_t inv_view    = material_->uniform("inv_view"   );
-//   uniform_ptr_t obj_pos     = material_->uniform("obj_pos"    );
-//   uniform_ptr_t size        = material_->uniform("size"       );
-//   uniform_ptr_t cam_pos     = material_->uniform("cam_pos"    );
-//   uniform_ptr_t cube_map    = material_->uniform("cube_map"   );
-//   uniform_ptr_t scale       = material_->uniform("scale"      );
-//   uniform_ptr_t m_prj       = material_->uniform("m_prj"      );
-//   uniform_ptr_t tex         = material_->uniform("tex"        );
-//   uniform_ptr_t ref_in      = material_->uniform("ref_in"     );
-//   uniform_ptr_t eye_pos     = material_->uniform("eye_pos"    );
-//   uniform_ptr_t light_pos   = material_->uniform("light_pos"  );
-//   uniform_ptr_t light_color = material_->uniform("light_color");
-//   uniform_ptr_t k_a         = material_->uniform("k_a"        );
-//   uniform_ptr_t k_d         = material_->uniform("k_d"        );
-//   uniform_ptr_t k_s         = material_->uniform("k_s"        );
-//   uniform_ptr_t spec_power  = material_->uniform("spec_power" );
-//   uniform_ptr_t f_bl        = material_->uniform("f_bl"       );
-//   uniform_ptr_t f_tl        = material_->uniform("f_tl"       );
-//   uniform_ptr_t f_br        = material_->uniform("f_br"       );
-//   uniform_ptr_t f_tr        = material_->uniform("f_tr"       );
-//   uniform_ptr_t near_plane  = material_->uniform("near"       );
-//   uniform_ptr_t far_plane   = material_->uniform("far"        );
-
+   uniform_ptr_t m_mvp = material_->uniform("m_mvp");
    m_mvp->set      (&env->mvp_);
-//   inv_view->set   (inverse(env->proj_));
-//   obj_pos->set    (pos_);
-//   size->set       (size_);
-//   cam_pos->set    (env->cam_.pos());
-//   cube_map->set   (0);
-//   scale->set      (200.0f);
-//   m_prj->set      (env->proj_);
-//   tex->set        (0);
-//   ref_in->set     (0.75f);
-//   eye_pos->set    (env->cam_.pos());
-//   light_pos->set  (vec3(2.0f, 2.0f, 2.0f));
-//   light_color->set(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-//   k_a->set        (0.0f);
-//   k_d->set        (0.1f);
-//   k_s->set        (0.9f);
-//   spec_power->set (27.0f);
-//   near_plane->set (env->fake_cam_.near_plane());
-//   far_plane->set  (env->fake_cam_.far_plane());
-
-   float va_radians = (env->fake_cam_.view_angle() / 360.0f) * pi<float>();
-
-   float cos_a2 = cos(va_radians);
-   float sin_a2 = 1.0f - cos_a2 * cos_a2;
-
-   float top_near_edge = env->fake_cam_.near_plane() * sin_a2 / cos_a2;
-
-   vec3 top    = env->fake_cam_.near_plane() * env->cam_.dir() + top_near_edge * env->cam_.up();
-   vec3 bottom = env->fake_cam_.near_plane() * env->cam_.dir() - top_near_edge * env->cam_.up();
-
-   vec3 right = ((float)env->width_ / env->height_) * top_near_edge * env->cam_.right();
-
-   vec3 v1 = bottom - right;
-   vec3 v2 = top    - right;
-   vec3 v3 = top    + right;
-   vec3 v4 = bottom + right;
-
-//   f_bl->set(v1);
-//   f_tl->set(v2);
-//   f_br->set(v3);
-//   f_tr->set(v4);
 
    switch(render_param_.texture_type)
    {

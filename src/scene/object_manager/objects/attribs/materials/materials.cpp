@@ -479,16 +479,13 @@ GLuint material_t::gl_id() const
 
 uniform_ptr_t material_t::uniform( string const & name )
 {
-   uniform_ptr_t uniform = uniforms_[name];
+   uniform_ptr_t uniform(uniforms_[name]);
 
-   if (!uniform.get())
+   if (!uniform)
    {
       uniform = uniform_ptr_t(new uniform_t());
-
       uniform->set_init(false);
-
       uniforms_[name] = uniform;
-
       cerr << "Undefined uniform: '" << name << "'!" << endl;
 
       return uniform;
@@ -503,50 +500,41 @@ void material_t::fill_uniforms_info( material_ptr_t const & material )
 
    glGetProgramiv(prog_, GL_ACTIVE_UNIFORMS, &uniforms_count);
 
-   if (uniforms_count != 0)
-   {
-      uniform_info_t uniform_tnp;
-
+   if (uniforms_count != 0) {
+      uniform_info_t uniform_tmp;
       this_ptr_ = material;
-
-      char_ptr_t   name      (new GLchar[30])
-                 , block_name(new GLchar[30]);
-
+      const size_t uniform_max_length = 30;
+      std::vector<GLchar> name(uniform_max_length), block_name(uniform_max_length);
       size_t j = 0;
+      for (int i = 0; i < uniforms_count; ++i) {
+         glGetActiveUniform(prog_, i, uniform_max_length, 0, &uniform_tmp.id, &uniform_tmp.type, &name[0]);
 
-      for (int i = 0; i < uniforms_count; ++i)
-      {
-         glGetActiveUniform(prog_, i, 30, 0, &uniform_tnp.id, &uniform_tnp.type, name.get());
+         uniform_tmp.init = false;
 
-         uniform_tnp.init = false;
+         if ((uniform_tmp.id = glGetUniformLocation(prog_, &name[0])) != -1) {
+            uniform_tmp.init = true;
+            uniform_tmp.name = std::string(&name[0]);
 
-         if ((uniform_tnp.id = glGetUniformLocation(prog_, name.get())) != -1)
-         {
-            uniform_tnp.init = true;
-            uniform_tnp.name = name.get();
-
-            uniform_ptr_t uniform = uniform_ptr_t(new uniform_t(this_ptr_.lock(), uniform_tnp));
+            uniform_ptr_t uniform = uniform_ptr_t(new uniform_t(this_ptr_.lock(), uniform_tmp));
             uniform->set_init(true);
-            uniforms_[string(uniform_tnp.name)] = uniform;
+            uniforms_[string(uniform_tmp.name)] = uniform;
          }
-         else
-         {
-            glGetActiveUniformBlockName(prog_, j, 30, 0, block_name.get());
+         else {
+            glGetActiveUniformBlockName(prog_, j, uniform_max_length, 0, &block_name[0]);
 
-            if ((uniform_tnp.index = glGetUniformBlockIndex(prog_, block_name.get())) != GL_INVALID_INDEX)
-            {
-               glGenBuffers(1, &uniform_tnp.buffer_id);
+            if ((uniform_tmp.index = glGetUniformBlockIndex(prog_, &block_name[0])) != GL_INVALID_INDEX) {
+               glGenBuffers(1, &uniform_tmp.buffer_id);
 
-               uniform_tnp.init          = true;
-               uniform_tnp.name          = block_name.get();
-               uniform_tnp.binding_point = j++;
+               uniform_tmp.init = true;
+               uniform_tmp.name = std::string(&block_name[0]);
+               uniform_tmp.binding_point = j++;
 
-               uniform_ptr_t uniform = uniform_ptr_t(new uniform_t(this_ptr_.lock(), uniform_tnp));
+               uniform_ptr_t uniform = uniform_ptr_t(new uniform_t(this_ptr_.lock(), uniform_tmp));
                uniform->set_init(true);
-               uniforms_[string(uniform_tnp.name)] = uniform;
+               uniforms_[string(uniform_tmp.name)] = uniform;
             }
             else
-               cerr << "Impossible to determine the position of the parameters: " << name << endl;
+               cerr << "Impossible to determine the position of the parameters: " << std::string(&name[0]) << endl;
          }
       }
    }

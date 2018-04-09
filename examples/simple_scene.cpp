@@ -3,14 +3,11 @@
 
 using namespace SE;
 
-void display_func_my()
-{
+void display_func_my() {
    engine.draw_frame();
-   //engine.debug_bar().draw_bar();
 }
 
-int main( int argc, char ** argv )
-{
+int main( int argc, char ** argv ) {
    examples_gui_t gui(argc, argv);
    
    engine.init(argc, argv, "Default scene");
@@ -31,6 +28,8 @@ int main( int argc, char ** argv )
 
    engine.static_scene().push(
          obj_manager_t::create_plane(engine.default_effect(), SE::engine.get_buffer_manager(), 1.0f, 1.0f, 40));
+
+   engine.static_scene().push(obj_manager_t::create_sphere(engine.default_effect(), engine.get_buffer_manager(), vec4(1, 0, 0, 1), 1));
 
    gui.start();
 
