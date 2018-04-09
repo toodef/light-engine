@@ -1,19 +1,12 @@
 #include "../base.h"
-#include "object_manager/objects/algorithms/lsvco/acmr.h"
-#include "object_manager/objects/algorithms/lsvco/ls_vcache_opt.h"
 
 using namespace scene;
 
-scene_t::scene_t()
-{
-
+scene_t::scene_t(){
 }
 
-scene_t ::~scene_t()
-{
-
+scene_t ::~scene_t(){
 }
-
 
 // push back one object to scene
 void scene_t::push(obj_ptr_t const & new_object)

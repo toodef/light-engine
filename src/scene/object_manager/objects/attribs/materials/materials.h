@@ -20,17 +20,13 @@ namespace materials
 ////////////////////////////////////////
    struct material_exception_t : std::exception
    {
-      material_exception_t()
-      {
+      material_exception_t() = default;
+
+      material_exception_t( const string & text ) : text_(text){
       }
 
-      material_exception_t( const string & text ) : text_(text)
-      {
-      }
-
-      virtual void print_exception()
-      {
-         cerr << text_ << endl;
+      virtual void print_exception(){
+         std::cerr << text_ << endl;
       }
 
       const string text_;
@@ -38,17 +34,13 @@ namespace materials
 
    struct create_shader_exception_t : material_exception_t
    {
-      create_shader_exception_t()
-      {
+      create_shader_exception_t() = default;
+
+      create_shader_exception_t( const string & text ) : text_(text) {
       }
 
-      create_shader_exception_t( const string & text ) : text_(text)
-      {
-      }
-
-      virtual void print_exception()
-      {
-         cerr << text_ << endl;
+      virtual void print_exception() {
+         std::cerr << text_ << endl;
       }
 
       const string text_;
@@ -56,12 +48,10 @@ namespace materials
 
    struct load_exception_t : create_shader_exception_t
    {
-      load_exception_t( const string & text ) : text_(text)
-      {
+      load_exception_t( const string & text ) : text_(text) {
       }
 
-      void print_exception()
-      {
+      void print_exception() {
          cerr << text_ << endl;
       }
 
@@ -70,15 +60,14 @@ namespace materials
 
    struct compile_exception_t : create_shader_exception_t
    {
-      compile_exception_t( const string & text, string const & err_list ) : text_(text),
-                                                                          err_list_(err_list)
-      {
-      }
+      compile_exception_t( const string & text, string const & err_list ) :
+         text_(text),
+         err_list_(err_list) 
+      {}
 
-      void print_exception()
-      {
-         cerr << text_ << endl;
-         cerr << "Error list:" << endl << err_list_ << endl;
+      void print_exception() {
+         std::cerr << text_ << endl;
+         std::cerr << "Error list:" << endl << err_list_ << endl;
       }
 
       const string text_;
@@ -87,13 +76,10 @@ namespace materials
 
    struct create_prog_exception_t : create_shader_exception_t
    {
-      create_prog_exception_t( const string & text ) : text_(text)
-      {
-      }
+      create_prog_exception_t( const string & text ) : text_(text) {}
 
-      void print_exception()
-      {
-         cerr << text_ << endl;
+      void print_exception() {
+         std::cerr << text_ << endl;
       }
 
       const string text_;
@@ -119,6 +105,10 @@ namespace materials
       material_t * bound_material() const;
 
    private:
+
+   private:
+      void parse_uniforms();
+
       material_t * bound_material_;
    };
 
@@ -135,8 +125,7 @@ namespace materials
          , binding_point (0)
          , type          (0)
          , init          (0)
-      {
-      }
+      {}
 
       string name;
       GLint  id;
@@ -159,9 +148,9 @@ namespace materials
       void set( vector<vec4> const & data );
       void set( vector<int> const & data );
       void set( vector<float> const & data );
-      void set( int const * data          , size_t count = 1 );
-      void set( unsigned int const * data , size_t count = 1 );
-      void set( float const * data        , size_t count = 1 );
+      void set( int const * data, size_t count = 1 );
+      void set( unsigned int const * data, size_t count = 1 );
+      void set( float const * data, size_t count = 1 );
       void set( float const data );
       void set( int unit ); // for textures only
       void set( vec2 const & );

@@ -38,8 +38,6 @@ namespace environment
 #include "scene/object_manager/objects/attribs/textures/textures.h"
 #include "scene/object_manager/objects/attribs/materials/materials.h"
 #include "scene/object_manager/objects/attribs/buffers/buffers.h"
-#include "scene/object_manager/objects/algorithms/lsvco/acmr.h"
-#include "scene/object_manager/objects/algorithms/lsvco/ls_vcache_opt.h"
 #include "scene/render/render.h"
 #include "scene/object_manager/objects/object.h"
 #include "scene/object_manager/object_manager.h"

@@ -35,22 +35,22 @@ void keyboard_process()
       close_func();
 
    if (key_buf['w'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_front);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_front);
 
    if (key_buf['a'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_left);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_left);
 
    if (key_buf['s'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_back);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_back);
 
    if (key_buf['d'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_right);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_right);
 
    if (key_buf['q'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_down);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_down);
 
    if (key_buf['e'])
-      SE::engine.move_camera(0.1f, SE::camera_way_t::CW_up);
+      SE::engine.move_camera(0.01f, SE::camera_way_t::CW_up);
 }
 
 void keyboard_func(unsigned char button, int x, int y) {
