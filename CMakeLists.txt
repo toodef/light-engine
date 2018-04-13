@@ -22,12 +22,12 @@ link_directories(${GLEW_ROOT}/lib/Release/x64)
 
 add_subdirectory(src)
 
-option(BUILD_TESTS OFF)
-if (BUILD_TESTS STREQUAL ON)
-   add_subdirectory(tests)
+option(BUILD_PYTHON ON)
+if (BUILD_PYTHON)
+   add_subdirectory(python)
 endif()
 
 option(BUILD_EXAMPLES OFF)
-if (BUILD_EXAMPLES STREQUAL ON)
+if (BUILD_EXAMPLES)
    add_subdirectory(examples)
 endif()
