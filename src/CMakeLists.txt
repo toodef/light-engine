@@ -7,7 +7,12 @@ set(SOURCE_FILES
         light_engine.cpp)
 
 set(HEADER_FILES
-        ../include/light_engine.hpp)
+        ../include/light_engine.hpp
+        ../include/scene/scene.hpp
+        ../include/scene/object/object.hpp
+        ../include/camera/camera.hpp
+        ../include/scene/object/shader/shader.hpp
+        ../include/scene/object/texture/texture.hpp)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ../include)
