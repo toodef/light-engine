@@ -26,7 +26,7 @@ namespace LE {
       void calc_vertex_attribs(int data_components);
 
    private:
-      unsigned int id_, vertices_number_;
+      unsigned int id_, vao_id_, vertices_number_;
 
       struct vertex_attrib_t {unsigned int index, size, pointer_position;};
       std::vector<vertex_attrib_t> vertex_attribs_;

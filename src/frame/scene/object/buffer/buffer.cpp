@@ -6,6 +6,7 @@ using namespace LE;
 
 buffer_t::buffer_t(std::vector<glm::vec3> const & vertices): vertices_number_(vertices.size()) {
    glGenBuffers(1, &id_);
+   glGenVertexArrays(1, &vao_id_);
 
    glBindBuffer(GL_ARRAY_BUFFER, id_);
    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -16,6 +17,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices): vertices_number_(ve
 
 buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & color) : vertices_number_(vertices.size()) {
    glGenBuffers(1, &id_);
+   glGenVertexArrays(1, &vao_id_);
 
    struct data_unit {
       glm::vec3 pos, color;
@@ -38,6 +40,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & co
 
 buffer_t::~buffer_t() {
    glDeleteBuffers(1, &id_);
+   glDeleteVertexArrays(1, &vao_id_);
 }
 
 void buffer_t::calc_vertex_attribs(int data_components) {
@@ -80,11 +83,13 @@ void buffer_t::disable_vertex_attribs() const {
 }
 
 void buffer_t::bind() {
+   glBindVertexArray(vao_id_);
    glBindBuffer(GL_ARRAY_BUFFER, id_);
 }
 
 void buffer_t::unbind() {
    glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glBindVertexArray(vao_id_);
 }
 
 unsigned int buffer_t::vertices_number() const {

@@ -10,12 +10,12 @@ object_t::object_t(buffer_ptr_t const & buffer): buffer_(buffer), shader_prog_(s
 void object_t::draw() const {
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+   buffer_->bind();
+   buffer_->enable_vertex_attribs();
+
    shader_prog_->bind();
    if (set_uniforms_callback_)
       set_uniforms_callback_(shader_prog_);
-
-   buffer_->bind();
-   buffer_->enable_vertex_attribs();
 
    glDrawArrays(GL_POINTS, 0, buffer_->vertices_number());
 

@@ -37,7 +37,7 @@ void resize_func(int w, int h)
 bool key_buf[256] = { 0 };
 
 void close_func() {
-   light_engine.release();
+   light_engine.reset();
 
    exit(0);
 }
@@ -107,7 +107,7 @@ public:
       user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
       scene->get_camera()->look_at(glm::vec3(0, 0, 0));
 
-      for (size_t i = 0; i < 1000; ++i)
+      for (size_t i = 0; i < 100; ++i)
          scene->add_object(builtin_objects_t::point(glm::vec3((float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5), glm::vec3(0, 1, 0)));
 
       glDebugMessageCallbackARB(gl_debug_proc, NULL);
@@ -117,6 +117,12 @@ public:
       glutKeyboardUpFunc(keyboard_up);
       glutMouseFunc(mouse);
       glutMotionFunc(mouse_func);
+
+      const char * vend = (const char *)glGetString(GL_VENDOR);
+      const char * render = (const char *)glGetString(GL_RENDERER);
+      const char * vers = (const char *)glGetString(GL_VERSION);
+
+      std::cout << std::string(vend) << std::endl << std::string(render) << std::endl << std::string(vers) << std::endl;
    }
 
    void start()

@@ -4,6 +4,12 @@
 
 using namespace LE;
 
+#ifndef VERSION
+const std::string light_engine_t::version = "No version defined";
+#elif
+const std::string light_engine_t::version = VERSION;
+#endif
+
 light_engine_t::light_engine_t() {
    glewInit();
 }

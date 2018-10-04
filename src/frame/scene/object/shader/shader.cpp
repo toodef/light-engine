@@ -105,9 +105,10 @@ shader_prog_ptr_t shader_prog_t::create_default() {
       "}",
       fragment_src = "#version 420\n"
       "in vec3 out_col;\n"
+      "layout ( location = 0 ) out vec4 color;\n"
       "void main()\n"
       "{\n"
-      "   gl_FragColor = vec4(out_col, 1);\n"
+      "   color = vec4(out_col, 1.0f);\n"
       "}";
 
    return std::make_shared<shader_prog_t>(std::make_shared<shader_t>(vertex_src, shader_t::ST_vertex),
@@ -124,22 +125,18 @@ void shader_prog_t::fill_uniforms_info() {
 
    glGetProgramiv(prog_, GL_ACTIVE_UNIFORMS, &uniforms_count);
 
-   if (uniforms_count != 0)
-   {
+   if (uniforms_count != 0) {
       uniform_variable_t::uniform_info_t uniform_tmp;
 
       char * name = new GLchar[30], * block_name = new GLchar[30];
-
       size_t j = 0;
 
-      for (int i = 0; i < uniforms_count; ++i)
-      {
+      for (int i = 0; i < uniforms_count; ++i) {
          glGetActiveUniform(prog_, i, 30, 0, &uniform_tmp.id, &uniform_tmp.type, name);
 
          uniform_tmp.init = false;
 
-         if ((uniform_tmp.id = glGetUniformLocation(prog_, name)) != -1)
-         {
+         if ((uniform_tmp.id = glGetUniformLocation(prog_, name)) != -1) {
             uniform_tmp.init = true;
             uniform_tmp.name = name;
 
@@ -147,12 +144,10 @@ void shader_prog_t::fill_uniforms_info() {
             uniform->set_init(true);
             uniform_variables_[uniform_tmp.name] = uniform;
          }
-         else
-         {
+         else {
             glGetActiveUniformBlockName(prog_, j, 30, 0, block_name);
 
-            if ((uniform_tmp.index = glGetUniformBlockIndex(prog_, block_name)) != GL_INVALID_INDEX)
-            {
+            if ((uniform_tmp.index = glGetUniformBlockIndex(prog_, block_name)) != GL_INVALID_INDEX) {
                glGenBuffers(1, &uniform_tmp.buffer_id);
 
                uniform_tmp.init = true;

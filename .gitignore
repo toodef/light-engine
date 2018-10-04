@@ -4,3 +4,6 @@ cmake-build*
 build
 Debug
 *.json
+bin/*
+lib/*
+*/pybind11/*

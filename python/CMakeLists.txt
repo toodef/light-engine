@@ -14,3 +14,17 @@ add_subdirectory(${PYBIND11_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
 
 pybind11_add_module(${PROJECT_NAME} py_interface.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE light-engine)
+
+if (DEFINED VERSION)
+    add_definitions(-DVERSION=\"${VERSION}\")
+else()
+    add_definitions(-DVERSION=\"Custom build\")
+endif()
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/setup.py --version ${VERSION} --bin-path ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} --source-path ${CMAKE_CURRENT_SOURCE_DIR}
+      WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+      COMMENT "Generate python whl file..."
+      )
+
+install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/dist DESTINATION python PATTERN "*.whl")
