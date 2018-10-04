@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 find_package(OpenGL REQUIRED)
 
@@ -29,5 +29,5 @@ endif()
 
 option(BUILD_EXAMPLES OFF)
 if (BUILD_EXAMPLES)
-   add_subdirectory(examples)
+   add_subdirectory(examples/cpp)
 endif()

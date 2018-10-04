@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(pyle)
 
+set(CMAKE_CXX_STANDARD 14)
+
 if (DEFINED ENV{PYBIND11_DIR})
    set(PYBIND11_DIR $ENV{PYBIND11_DIR})
 else()
@@ -11,3 +13,4 @@ endif()
 add_subdirectory(${PYBIND11_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
 
 pybind11_add_module(${PROJECT_NAME} py_interface.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE light-engine)
