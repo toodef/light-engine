@@ -1,0 +1,3 @@
+[submodule "examples/python/PySide2Wrapper"]
+	path = examples/python/PySide2Wrapper
+	url = https://github.com/toodef/PySide2Wrapper.git

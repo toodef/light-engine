@@ -1,6 +1,24 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
+
+SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
+        CACHE PATH
+        "Single Directory for all"
+        )
+
+SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
+        ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
+        CACHE PATH
+        "Single Directory for all"
+        )
+
+SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+        ${CMAKE_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}
+        CACHE PATH
+        "Single Directory for all"
+        )
 
 find_package(OpenGL REQUIRED)
 
@@ -22,12 +40,12 @@ link_directories(${GLEW_ROOT}/lib/Release/x64)
 
 add_subdirectory(src)
 
-option(BUILD_TESTS OFF)
-if (BUILD_TESTS STREQUAL ON)
-   add_subdirectory(tests)
+option(BUILD_PYTHON ON)
+if (BUILD_PYTHON)
+   add_subdirectory(python)
 endif()
 
 option(BUILD_EXAMPLES OFF)
-if (BUILD_EXAMPLES STREQUAL ON)
-   add_subdirectory(examples)
+if (BUILD_EXAMPLES)
+   add_subdirectory(examples/cpp)
 endif()
