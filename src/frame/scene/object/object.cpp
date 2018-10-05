@@ -4,8 +4,8 @@
 
 using namespace LE;
 
-object_t::object_t(buffer_ptr_t const & buffer): buffer_(buffer), shader_prog_(shader_prog_t::create_default()) {
-}
+object_t::object_t(buffer_ptr_t const & buffer, shader_prog_ptr_t const & shader_prog) : buffer_(buffer), shader_prog_(shader_prog) {}
+object_t::object_t(buffer_ptr_t const & buffer) : object_t(buffer, shader_prog_t::create_default()) {}
 
 void object_t::draw() const {
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

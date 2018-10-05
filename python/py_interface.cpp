@@ -90,5 +90,6 @@ PYBIND11_MODULE(pyle, m) {
                key_buf[i] = key_buffer[i];
             self.process_keyboard(key_buf);
          }, py::arg("key_buffer"), "Process presseg keys")
-      .def("process_wheel", &LE::Utils::user_mouse_camera_t::process_wheel, py::arg("scrolls_count"), "Process mouse wheel scrolls");
+      .def("process_wheel", &LE::Utils::user_mouse_camera_t::process_wheel, py::arg("scrolls_count"), "Process mouse wheel scrolls")
+      .def("process_mouse_press", &LE::Utils::user_mouse_camera_t::process_mouse_press, py::arg("x_pos"), py::arg("y_pos"), py::arg("is_left_button"), py::arg("is_pressed"), "Detect mouse press");
 }
