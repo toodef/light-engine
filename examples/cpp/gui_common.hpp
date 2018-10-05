@@ -82,18 +82,6 @@ public:
       glutCreateWindow("Basic Sample");
 
       light_engine = std::make_unique<light_engine_t>();
-      frame_ptr_t frame = std::make_shared<frame_t>();
-      scene = std::make_shared<scene_t>();
-      frame->add_scene(scene);
-      light_engine->add_frame(frame);
-      frame->set_background_color(glm::vec3(0, 0, 0));
-
-      user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
-      scene->get_camera()->look_at(glm::vec3(0, 0, 0));
-
-      shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
-      for (size_t i = 0; i < 1000; ++i)
-         scene->add_object(builtin_objects_t::point(glm::vec3((float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5), glm::vec3(0, 1, 0), shader_prog));
 
       glDebugMessageCallbackARB(gl_debug_proc, NULL);
       glutReshapeFunc(resize_func);
@@ -110,8 +98,7 @@ public:
       std::cout << std::string(vend) << std::endl << std::string(render) << std::endl << std::string(vers) << std::endl;
    }
 
-   void start()
-   {
+   void start() {
       try {
          glutMainLoop();
       }
