@@ -11,6 +11,7 @@ namespace LE {
    class object_t {
    public:
       object_t(buffer_ptr_t const & buffer);
+      object_t(buffer_ptr_t const & buffer, shader_prog_ptr_t const & shader_prog);
       void draw() const;
 
       typedef std::function<void(shader_prog_ptr_t const &)> set_uniforms_callback_t;
