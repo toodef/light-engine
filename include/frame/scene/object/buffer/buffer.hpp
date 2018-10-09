@@ -19,14 +19,19 @@ namespace LE {
       void bind();
       void unbind();
 
+      void add_index_buffer(std::vector<unsigned int> const & indices);
+      bool have_idx_buffer() const;
+
       unsigned int vertices_number() const;
+      unsigned int indices_number() const;
 
    private:
       enum vertex_data_components_t {VDC_positions = 1, VDC_colors_rgb = 2, VDC_colors_rgba = 4, VDC_normals = 8, VDC_texture_coords = 16};
       void calc_vertex_attribs(int data_components);
 
    private:
-      unsigned int id_, vao_id_, vertices_number_;
+      unsigned int id_, vao_id_, vertices_number_, idx_id_, indices_number_;
+      bool have_idx_buffer_;
 
       struct vertex_attrib_t {unsigned int index, size, pointer_position;};
       std::vector<vertex_attrib_t> vertex_attribs_;

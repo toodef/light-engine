@@ -23,14 +23,7 @@ void gl_debug_proc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
       std::cerr << message << std::endl << user_param << std::endl;
 }
 
-void resize_func(int w, int h)
-{
-   if (w < 10)
-      w = 10;
-
-   if (h < 10)
-      h = 10;
-
+void resize_func(int w, int h) {
    light_engine->resize(w, h);
 }
 
@@ -38,17 +31,12 @@ bool key_buf[256] = { 0 };
 
 void close_func() {
    light_engine.reset();
-
    exit(0);
 }
 
-bool is_standart_cam = true;
-
-void keyboard_process()
-{
+void keyboard_process() {
    if (key_buf[27])
       close_func();
-
    user_camera->process_keyboard(key_buf);
 }
 
@@ -60,11 +48,7 @@ void keyboard_up(unsigned char button, int x, int y) {
    key_buf[button] = 0;
 }
 
-int old_x, old_y;
-bool is_rot = 1;
-
-void display_func()
-{
+void display_func() {
    keyboard_process();
 
    light_engine->redraw();
@@ -86,7 +70,7 @@ void mouse(int button, int state, int x, int y) {
 
 class examples_gui_t {
 public:
-   examples_gui_t(int argc, char ** argv) {
+   examples_gui_t(int argc, char ** argv, std::string const & window_title) {
       glutInit(&argc, argv);
 
       glutInitWindowSize(800, 700);
@@ -95,21 +79,9 @@ public:
       glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
       glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 
-      glutCreateWindow("Basic Sample");
+      glutCreateWindow(window_title.c_str());
 
       light_engine = std::make_unique<light_engine_t>();
-      frame_ptr_t frame = std::make_shared<frame_t>();
-      scene = std::make_shared<scene_t>();
-      frame->add_scene(scene);
-      light_engine->add_frame(frame);
-      frame->set_background_color(glm::vec3(0, 0, 0));
-
-      user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
-      scene->get_camera()->look_at(glm::vec3(0, 0, 0));
-
-      shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
-      for (size_t i = 0; i < 100000; ++i)
-         scene->add_object(builtin_objects_t::point(glm::vec3((float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5), glm::vec3(0, 1, 0), shader_prog));
 
       glDebugMessageCallbackARB(gl_debug_proc, NULL);
       glutReshapeFunc(resize_func);
@@ -126,8 +98,7 @@ public:
       std::cout << std::string(vend) << std::endl << std::string(render) << std::endl << std::string(vers) << std::endl;
    }
 
-   void start()
-   {
+   void start() {
       try {
          glutMainLoop();
       }
