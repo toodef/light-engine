@@ -18,7 +18,7 @@ object_ptr_t builtin_objects_t::triangle(std::vector<glm::vec3> const & vertices
 
 object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, glm::vec3 const & color, unsigned int detalisation, shader_prog_ptr_t const & shader_prog) {
    std::vector<glm::vec3> vertices(12);
-   std::vector<unsigned int> indices {
+   static const std::vector<unsigned int> indices {
       0 , 4 , 1 ,
       0 , 9 , 4 ,
       9 , 5 , 4 ,
@@ -60,5 +60,53 @@ object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, g
    buffer->add_index_buffer(indices);
    auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
    object->set_drawing_style(object_t::DS_triangles);
+   return object;
+}
+
+object_ptr_t builtin_objects_t::quad(std::vector<glm::vec3> const & vertices, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+   static const std::vector<unsigned int> indices{
+      0 , 1 , 2 ,
+      0 , 2 , 3 };
+
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
+   buffer->add_index_buffer(indices);
+   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   object->set_drawing_style(object_t::DS_triangles);
+   return object;
+}
+
+object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & up, glm::vec3 const & right, glm::vec3 const & forward, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+   const std::vector<glm::vec3> vertices = {
+      center - up - right - forward,
+      center + up - right - forward,
+      center + up + right - forward,
+      center - up + right - forward,
+      center - up - right + forward,
+      center + up - right + forward,
+      center + up + right + forward,
+      center - up + right + forward
+   };
+
+   static const std::vector<unsigned int> indices{
+      0, 1, 2, 0, 2, 3,
+      0, 1, 5, 0, 5, 4,
+      4, 5, 6, 4, 6, 7,
+      3, 2, 6, 3, 6, 7,
+      1, 5, 6, 1, 6, 2,
+      4, 0, 3, 4, 3, 7
+   };
+
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
+   buffer->add_index_buffer(indices);
+   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   object->set_drawing_style(object_t::DS_triangles);
+   return object;
+}
+
+object_ptr_t builtin_objects_t::line(glm::vec3 const & v0, glm::vec3 const & v1, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+   const std::vector<glm::vec3> vertices = {v0, v1};
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
+   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   object->set_drawing_style(object_t::DS_lines);
    return object;
 }

@@ -10,7 +10,7 @@
 namespace LE {
    class object_t {
    public:
-      enum drawing_style_t { DS_points, DS_triangles, DS_quads };
+      enum drawing_style_t { DS_points, DS_triangles, DS_lines };
 
    public:
       object_t(buffer_ptr_t const & buffer);

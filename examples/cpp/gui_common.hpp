@@ -70,7 +70,7 @@ void mouse(int button, int state, int x, int y) {
 
 class examples_gui_t {
 public:
-   examples_gui_t(int argc, char ** argv) {
+   examples_gui_t(int argc, char ** argv, std::string const & window_title) {
       glutInit(&argc, argv);
 
       glutInitWindowSize(800, 700);
@@ -79,7 +79,7 @@ public:
       glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
       glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 
-      glutCreateWindow("Basic Sample");
+      glutCreateWindow(window_title.c_str());
 
       light_engine = std::make_unique<light_engine_t>();
 

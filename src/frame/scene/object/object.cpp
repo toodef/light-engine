@@ -16,8 +16,8 @@ GLenum convert_drawing_style(object_t::drawing_style_t drawing_style) {
       return GL_POINTS;
    case object_t::DS_triangles:
       return GL_TRIANGLES;
-   case object_t::DS_quads:
-      return GL_QUADS;
+   case object_t::DS_lines:
+      return GL_LINES;
    }
 }
 

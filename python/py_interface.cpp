@@ -78,7 +78,13 @@ PYBIND11_MODULE(pyle, m) {
       .def("draw", &LE::object_t::draw, "Draw object");
 
    py::class_<LE::builtin_objects_t>(m, "BuiltinObjects")
-      .def_static("point", &LE::builtin_objects_t::point, py::arg("position"), py::arg("color"));
+      .def_static("point", &LE::builtin_objects_t::point, py::arg("position"), py::arg("color"))
+      .def_static("triangle", &LE::builtin_objects_t::triangle, py::arg("vertices"), py::arg("color"))
+      .def_static("sphere", &LE::builtin_objects_t::sphere, py::arg("center"), py::arg("radius"), py::arg("color"), py::arg("detalisation"))
+      .def_static("quad", &LE::builtin_objects_t::quad, py::arg("vertices"), py::arg("color"))
+      .def_static("box", &LE::builtin_objects_t::triangle, py::arg("center"), py::arg("right"), py::arg("up"), py::arg("forward"), py::arg("color"))
+      .def_static("point_cloud", &LE::builtin_objects_t::point_cloud, py::arg("positions"), py::arg("color"))
+      .def_static("line", &LE::builtin_objects_t::triangle, py::arg("v0"), py::arg("v1"), py::arg("color"));
 
    py::class_<LE::Utils::user_mouse_camera_t>(m, "UserMouseCamera")
       .def(py::init<LE::camera_ptr_t const &>())
