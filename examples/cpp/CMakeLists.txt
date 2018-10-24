@@ -1,2 +1,3 @@
 add_subdirectory(simple_scene)
 add_subdirectory(builtin_objects)
+add_subdirectory(custom_object)

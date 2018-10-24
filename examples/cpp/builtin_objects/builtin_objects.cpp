@@ -40,7 +40,7 @@ int main( int argc, char ** argv ) {
    cur_cell_y = 1;
    cur_cell_min_x = cur_cell_x - (float)cells_num_x / 2;
    cur_cell_min_y = cur_cell_y - (float)cells_num_y / 2;
-   scene->add_object(builtin_objects_t::sphere(glm::vec3(cur_cell_min_x + 0.5, cur_cell_min_y + 0.5, 0.5), 0.5, glm::vec3(1, 1, 1), 1, shader_prog));
+   scene->add_object(builtin_objects_t::sphere(glm::vec3(cur_cell_min_x + 0.5, cur_cell_min_y + 0.5, 0.5), 0.5, glm::vec3(1, 1, 1), 2, shader_prog));
 
    cur_cell_x = 1;
    cur_cell_y = 1;

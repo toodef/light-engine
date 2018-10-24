@@ -11,6 +11,7 @@ namespace LE {
    public:
       buffer_t(std::vector<glm::vec3> const & vertices);
       buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & color);
+      buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normals, glm::vec3 const & color);
       ~buffer_t();
 
       void enable_vertex_attribs() const;
