@@ -56,7 +56,7 @@ class LELogo(pyle.Object):
         shader_prog.uniform_variable("mvp").set(self.camera.model_view_projection_matrix())
         shader_prog.uniform_variable("normal_matrix").set(self.camera.normal_matrix())
         shader_prog.uniform_variable("model_view").set(self.camera.model_view_matrix())
-        shader_prog.uniform_variable("light_position").set(pyle.Vec3(1, 1, 1))
+        shader_prog.uniform_variable("light_position").set(pyle.Vec3(0, 1, 10))
         shader_prog.uniform_variable("light_color").set(pyle.Vec3(1, 1, 1))
         shader_prog.uniform_variable("ambient_strength").set(0.2)
         shader_prog.uniform_variable("diffuse_strength").set(0.3)
@@ -137,7 +137,7 @@ class SimpleScene:
         self.user_camera = pyle.UserMouseCamera(scene.get_camera())
         frame.set_background_color(pyle.Vec3(0, 0, 0))
         scene.get_camera().look_at(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 0))
-        scene.get_camera().pos(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 3))
+        scene.get_camera().pos(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 2))
 
         obj = LELogo(scene.get_camera())
         scene.add_object(obj)

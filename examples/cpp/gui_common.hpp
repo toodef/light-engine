@@ -73,7 +73,7 @@ public:
    examples_gui_t(int argc, char ** argv, std::string const & window_title) {
       glutInit(&argc, argv);
 
-      glutInitWindowSize(800, 700);
+      glutInitWindowSize(800, 800);
       glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
       glutInitContextVersion(4, 2);
       glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);

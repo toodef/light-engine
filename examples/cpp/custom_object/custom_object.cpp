@@ -56,7 +56,7 @@ private:
       shader_prog_->uniform_variable("mvp")->set(camera_->model_view_projection_matrix());
       shader_prog_->uniform_variable("normal_matrix")->set(camera_->normal_matrix());
       shader_prog_->uniform_variable("model_view")->set(camera_->model_view_matrix());
-      shader_prog_->uniform_variable("light_position")->set(glm::vec3(1, 1, 1));
+      shader_prog_->uniform_variable("light_position")->set(glm::vec3(0, 1, 10));
       shader_prog_->uniform_variable("light_color")->set(glm::vec3(1, 1, 1));
       shader_prog_->uniform_variable("ambient_strength")->set(0.2f);
       shader_prog_->uniform_variable("diffuse_strength")->set(0.3f);
@@ -145,7 +145,7 @@ int main( int argc, char ** argv ) {
    frame->add_scene(scene);
    user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
    scene->get_camera()->look_at(glm::vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 0));
-   scene->get_camera()->pos(glm::vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 3));
+   scene->get_camera()->pos(glm::vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 2));
 
    object_ptr_t obj = std::make_shared<le_logo_t>(scene->get_camera());
    scene->add_object(obj);
