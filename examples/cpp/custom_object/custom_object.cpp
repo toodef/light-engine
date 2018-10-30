@@ -3,9 +3,9 @@
 
 using namespace LE;
 
-class lighted_cube_t : public object_t {
+class lighted_sphere_t : public object_t {
 public:
-   lighted_cube_t(camera_ptr_t const & camera) : camera_(camera) {
+   lighted_sphere_t(camera_ptr_t const & camera) : object_t(buffer_), camera_(camera) {
       static const glm::vec3 center(0, 0, 0), color(0, 1, 0);
       static const float radius = 0.5;
       std::vector<glm::vec3> vertices(12);
@@ -97,7 +97,7 @@ public:
       buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, normales, color);
       buffer->add_index_buffer(end_index_data);
       buffer_ = buffer;
-      shader_prog_ = lighted_cube_t::create_shader_prog();
+      shader_prog_ = lighted_sphere_t::create_shader_prog();
       set_drawing_style(object_t::DS_triangles);
    }
 
@@ -105,7 +105,7 @@ public:
       shader_prog_->uniform_variable("mvp")->set(camera_->model_view_projection_matrix());
       shader_prog_->uniform_variable("normal_matrix")->set(camera_->normal_matrix());
       shader_prog_->uniform_variable("model_view")->set(camera_->model_view_matrix());
-      shader_prog_->uniform_variable("light_position")->set(glm::vec3(3, 3, 3));
+      shader_prog_->uniform_variable("light_position")->set(glm::vec3(1, 1, -3));
       shader_prog_->uniform_variable("light_color")->set(glm::vec3(1, 1, 1));
       shader_prog_->uniform_variable("ambient_strength")->set(0.2f);
       shader_prog_->uniform_variable("diffuse_strength")->set(0.3f);
@@ -181,13 +181,10 @@ private:
                    fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
       return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
    }
-
-//private:
-//   static shader_prog_ptr_t light_shader_prog_ = lighted_cube_t::create_shader_prog();
 };
 
 int main( int argc, char ** argv ) {
-   examples_gui_t gui(argc, argv, "Custom Object");
+   examples_gui_t gui(argc, argv, "Custom Object Example");
 
    frame_ptr_t frame = std::make_shared<frame_t>();
    frame->set_background_color(glm::vec3(0, 0, 0));
@@ -198,7 +195,7 @@ int main( int argc, char ** argv ) {
    user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
    scene->get_camera()->look_at(glm::vec3(0, 0, 0));
 
-   object_ptr_t obj = std::make_shared<lighted_cube_t>(scene->get_camera());
+   object_ptr_t obj = std::make_shared<lighted_sphere_t>(scene->get_camera());
    scene->add_object(obj);
 
    gui.start();

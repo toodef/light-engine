@@ -17,6 +17,8 @@ namespace LE {
       void set_camera(camera_ptr_t const & camera);
       camera_ptr_t get_camera() const;
 
+      object_t::set_uniforms_callback_t get_set_uniform_callback();
+
    private:
       std::vector<object_ptr_t> objects_;
       camera_ptr_t camera_;

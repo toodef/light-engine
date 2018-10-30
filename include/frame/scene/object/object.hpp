@@ -22,11 +22,10 @@ namespace LE {
 
       typedef std::function<void(shader_prog_ptr_t const &)> set_uniforms_callback_t;
       void set_uniforms_callback(set_uniforms_callback_t const & callback);
+      set_uniforms_callback_t set_uniforms_callback();
 
-   protected:
-      object_t() = default;
-
-      virtual inline void draw_buffer() const;
+   private:
+      inline void draw_buffer() const;
 
       buffer_ptr_t buffer_;
       texture_ptr_t texture_;

@@ -10,8 +10,10 @@ scene_t::scene_t() : camera_(std::make_shared<camera_t>()) {
 }
 
 void scene_t::add_object(object_ptr_t const & object) {
-   object->set_uniforms_callback(set_uniform_variables_callback_);
    objects_.push_back(object);
+
+   if (!object->set_uniforms_callback())
+      object->set_uniforms_callback(get_set_uniform_callback());
 }
 
 void scene_t::draw() const {
@@ -21,3 +23,7 @@ void scene_t::draw() const {
 
 void scene_t::set_camera(camera_ptr_t const & camera) { camera_ = camera; }
 camera_ptr_t scene_t::get_camera() const { return camera_;  }
+
+object_t::set_uniforms_callback_t scene_t::get_set_uniform_callback() {
+   return set_uniform_variables_callback_;
+}

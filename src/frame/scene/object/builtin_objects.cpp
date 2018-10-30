@@ -147,6 +147,13 @@ object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & 
    return object;
 }
 
+object_ptr_t builtin_objects_t::point_cloud(std::vector<glm::vec3> const & positions, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(positions, color);
+   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   object->set_drawing_style(object_t::DS_points);
+   return object;
+}
+
 object_ptr_t builtin_objects_t::line(glm::vec3 const & v0, glm::vec3 const & v1, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
    const std::vector<glm::vec3> vertices = {v0, v1};
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);

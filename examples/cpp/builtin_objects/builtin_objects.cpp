@@ -4,7 +4,7 @@
 using namespace LE;
 
 int main( int argc, char ** argv ) {
-   examples_gui_t gui(argc, argv, "Builtin Objects");
+   examples_gui_t gui(argc, argv, "Builtin Objects Example");
 
    frame_ptr_t frame = std::make_shared<frame_t>();
    frame->set_background_color(glm::vec3(0, 0, 0));

@@ -1,7 +1,9 @@
 #include <sstream>
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/operators.h>
+#include <pybind11/functional.h>
 
 #include <glm/vec3.hpp>
 #include <light_engine.hpp>
@@ -28,7 +30,9 @@ PYBIND11_MODULE(pyle, m) {
       .def_readwrite("x", &glm::vec3::x)
       .def_readwrite("y", &glm::vec3::y)
       .def_readwrite("z", &glm::vec3::z);
-   
+
+   py::class_<glm::mat4>(m, "Mat4");
+
    py::class_<LE::light_engine_t>(m, "Engine")
       .def(py::init<>())
       .def("resize", &LE::light_engine_t::resize, py::arg("height"), py::arg("width"), "Resize render window")
@@ -71,20 +75,81 @@ PYBIND11_MODULE(pyle, m) {
       .def("height", (void (LE::camera_t:: *)(unsigned int)) &LE::camera_t::height, py::arg("height"), "Set height")
       .def("height", (unsigned int (LE::camera_t:: *)() const) &LE::camera_t::height, "Get height")
       .def("width", (void (LE::camera_t:: *)(unsigned int)) &LE::camera_t::width, py::arg("width"), "Set width")
-      .def("width", (unsigned int (LE::camera_t:: *)() const) &LE::camera_t::width, "Get width");
+      .def("width", (unsigned int (LE::camera_t:: *)() const) &LE::camera_t::width, "Get width")
+      .def("projection_matrix", &LE::camera_t::projection_matrix, "Get projection camera")
+      .def("model_view_matrix", &LE::camera_t::model_view_matrix, "Get model view matrix")
+      .def("model_view_projection_matrix", &LE::camera_t::model_view_projection_matrix, "Get model view projectin matrix")
+      .def("normal_matrix", &LE::camera_t::normal_matrix, "Get normal matrix");
 
-   py::class_<LE::object_t, LE::object_ptr_t>(m, "Object")
-      .def(py::init<LE::buffer_ptr_t const &>())
-      .def("draw", &LE::object_t::draw, "Draw object");
+   py::class_<LE::object_t, LE::object_ptr_t> object(m, "Object");
+   object.def(py::init<LE::buffer_ptr_t const &>());
+   object.def(py::init<LE::buffer_ptr_t const &, LE::shader_prog_ptr_t const &>());
+   object.def("draw", &LE::object_t::draw, "Draw object");
+   object.def("set_uniforms_callback", (void (LE::object_t:: *)(LE::object_t::set_uniforms_callback_t const &)) &LE::object_t::set_uniforms_callback, py::arg("uniform_callback"), "Set callback for uniform definition");
+   object.def("set_uniforms_callback", (LE::object_t::set_uniforms_callback_t (LE::object_t:: *)()) &LE::object_t::set_uniforms_callback, "Get callback for uniform definition");
+
+   py::enum_<LE::object_t::drawing_style_t>(object, "DrawingStyle")
+      .value("DS_points", LE::object_t::drawing_style_t::DS_points)
+      .value("DS_lines", LE::object_t::drawing_style_t::DS_lines)
+      .value("DS_triangles", LE::object_t::drawing_style_t::DS_triangles);
+
+   object.def("set_drawing_style", &LE::object_t::set_drawing_style, py::arg("drawing_style"), "Set object drawing style");
+
+   py::class_<LE::shader_t, LE::shader_ptr_t> shader(m, "Shader");
+   shader.def(py::init<std::string const &, LE::shader_t::shader_type_t>());
+   shader.def("id", &LE::shader_t::id, "Get shader id");
+
+   py::enum_<LE::shader_t::shader_type_t>(shader, "ShaderType")
+      .value("VERTEX", LE::shader_t::shader_type_t::ST_vertex)
+      .value("FRAGMENT", LE::shader_t::shader_type_t::ST_fragment)
+      .value("GEOMETRY", LE::shader_t::shader_type_t::ST_geometry);
+   
+   py::class_<LE::shader_prog_t, LE::shader_prog_ptr_t> shader_prog(m, "ShaderProg");
+   shader_prog.def(py::init<LE::shader_ptr_t const &, LE::shader_ptr_t const &, LE::shader_ptr_t const &>(), py::arg("vertex_shader") = LE::shader_ptr_t(), py::arg("fragment_shader") = LE::shader_ptr_t(), py::arg("geometry_shader") = LE::shader_ptr_t());
+   shader_prog.def("bind", &LE::shader_prog_t::bind, "Bind shader program");
+   shader_prog.def("unbind", &LE::shader_prog_t::unbind, "Unbind shader program");
+   shader_prog.def_static("create_default", &LE::shader_prog_t::create_default, "Create default shader program");
+   shader_prog.def("uniform_variable", &LE::shader_prog_t::uniform_variable, py::arg("name"), "Get uniform variable by name");
+
+   py::class_<LE::shader_prog_t::uniform_variable_t, LE::shader_prog_t::uniform_variable_ptr_t> uniform_variable(shader_prog, "UniformVariable");
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(std::vector<glm::vec2> const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(std::vector<glm::vec3> const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(std::vector<glm::vec4> const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(std::vector<int> const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(std::vector<float> const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(int const *, size_t)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(unsigned int const *, size_t)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(float const *, size_t)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(float const)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(int)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::vec2 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::vec3 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::vec4 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::mat2 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::mat3 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+   uniform_variable.def("set", (void (LE::shader_prog_t::uniform_variable_t:: *)(glm::mat4 const &)) &LE::shader_prog_t::uniform_variable_t::set);
+
+   py::class_<LE::buffer_t, LE::buffer_ptr_t>(m, "Buffer")
+      .def(py::init<std::vector<glm::vec3> const &>())
+      .def(py::init<std::vector<glm::vec3> const &, glm::vec3 const &>())
+      .def(py::init<std::vector<glm::vec3> const &, std::vector<glm::vec3> const &, glm::vec3 const &>())
+      .def("enable_vertex_attribs", &LE::buffer_t::enable_vertex_attribs, "Enable vertex attributes")
+      .def("disable_vertex_attribs", &LE::buffer_t::disable_vertex_attribs, "Disable vertex attributes")
+      .def("bind", &LE::buffer_t::bind, "Bind buffer")
+      .def("unbind", &LE::buffer_t::unbind, "Unbind buffer")
+      .def("add_index_buffer", &LE::buffer_t::add_index_buffer, py::arg("indices"), "Add index buffer")
+      .def("have_idx_buffer", &LE::buffer_t::have_idx_buffer, "Is buffer contains index buffer")
+      .def("vertices_number", &LE::buffer_t::vertices_number, "Get number of vertivec in buffer")
+      .def("indices_number", &LE::buffer_t::indices_number, "Get number of indices in buffer");
 
    py::class_<LE::builtin_objects_t>(m, "BuiltinObjects")
-      .def_static("point", &LE::builtin_objects_t::point, py::arg("position"), py::arg("color"))
-      .def_static("triangle", &LE::builtin_objects_t::triangle, py::arg("vertices"), py::arg("color"))
-      .def_static("sphere", &LE::builtin_objects_t::sphere, py::arg("center"), py::arg("radius"), py::arg("color"), py::arg("detalisation"))
-      .def_static("quad", &LE::builtin_objects_t::quad, py::arg("vertices"), py::arg("color"))
-      .def_static("box", &LE::builtin_objects_t::triangle, py::arg("center"), py::arg("right"), py::arg("up"), py::arg("forward"), py::arg("color"))
-      .def_static("point_cloud", &LE::builtin_objects_t::point_cloud, py::arg("positions"), py::arg("color"))
-      .def_static("line", &LE::builtin_objects_t::triangle, py::arg("v0"), py::arg("v1"), py::arg("color"));
+      .def_static("point", &LE::builtin_objects_t::point, py::arg("position"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("triangle", &LE::builtin_objects_t::triangle, py::arg("vertices"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("sphere", &LE::builtin_objects_t::sphere, py::arg("center"), py::arg("radius"), py::arg("color"), py::arg("detalisation"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("quad", &LE::builtin_objects_t::quad, py::arg("vertices"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("box", &LE::builtin_objects_t::box, py::arg("center"), py::arg("up"), py::arg("right"), py::arg("forward"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("point_cloud", &LE::builtin_objects_t::point_cloud, py::arg("positions"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
+      .def_static("line", &LE::builtin_objects_t::line, py::arg("v0"), py::arg("v1"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t());
 
    py::class_<LE::Utils::user_mouse_camera_t>(m, "UserMouseCamera")
       .def(py::init<LE::camera_ptr_t const &>())

@@ -53,3 +53,6 @@ void object_t::set_uniforms_callback(set_uniforms_callback_t const & callback) {
    set_uniforms_callback_ = callback;
 }
 
+object_t::set_uniforms_callback_t object_t::set_uniforms_callback() {
+   return set_uniforms_callback_;
+}
