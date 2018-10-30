@@ -24,8 +24,8 @@ namespace LE {
       void set_uniforms_callback(set_uniforms_callback_t const & callback);
       set_uniforms_callback_t set_uniforms_callback();
 
-   private:
-      inline void draw_buffer() const;
+   protected:
+      virtual inline void draw_buffer() const;
 
       buffer_ptr_t buffer_;
       texture_ptr_t texture_;

@@ -6,7 +6,7 @@ from PySide2Wrapper.PySide2Wrapper.widget import OpenGLWidget
 from PySide2Wrapper.PySide2Wrapper.app import Application
 
 
-class LightedSphere(pyle.Object):
+class LELogo(pyle.Object):
     def __init__(self, camera):
         l_offset = pyle.Vec3(-0.5, -0.5, 0)
         vertices = [
@@ -139,7 +139,7 @@ class SimpleScene:
         scene.get_camera().look_at(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 0))
         scene.get_camera().pos(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 3))
 
-        obj = LightedSphere(scene.get_camera())
+        obj = LELogo(scene.get_camera())
         scene.add_object(obj)
 
     def resize(self, w, h):
