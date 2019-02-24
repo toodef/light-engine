@@ -5,6 +5,10 @@ if not exist "win" mkdir win && cd win
 if not exist "lib" mkdir lib && cd lib
 
 curl -OL https://github.com/nigels-com/glew/releases/download/glew-2.1.0/glew-2.1.0-win32.zip -o glew-2.1.0-win32.zip
+
+dir
+dir glew-2.1.0-win32
+
 7z e glew-2.1.0-win32.zip
 
 dir
