@@ -12,7 +12,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pyle, m) {
+PYBIND11_MODULE(lepy, m) {
    m.doc() = "The python bindings for Light Engine";
 
    py::class_<glm::vec3>(m, "Vec3")
