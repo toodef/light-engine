@@ -1,0 +1,34 @@
+jobs:
+  include:
+    - stage: build
+      os: linux
+      sudo: required
+      dist: trusty
+      before_install: false
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - ninja-build
+      env: COMPILER=g++-7
+      script: ./build_lib
+
+    - stage: build
+      os: windows
+      env:
+        - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+      script:
+        - export PATH=$MSBUILD_PATH:$PATH
+        - ./build_lib.bat
+
+    - stage: build
+      os: windows
+      include:
+        -python: 3.6
+      env:
+        - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+      script:
+        - export PATH=$MSBUILD_PATH:$PATH
+        - ./build_lib.bat

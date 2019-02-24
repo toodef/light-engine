@@ -94,9 +94,20 @@ files_for_setup = dll_names + ["__init__.py"]
 
 print(files_for_setup)
 
+with open(os.path.join('..', '..', "README.md"), "r") as fh:
+   long_description = fh.read()
+
+from lepy import *
+
 setup(
     name=DISTNAME,
-    version=args.version,
+    version=lepy.Engine.__version__,
+    author="Anton Fedotov",
+    author_email="anton.fedotov.af@gmail.com.com",
+    description='Lightweight and fast 3D visualisation engine writen on C++ with Python bindings',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/toodef/light-engine",
     packages=[DISTNAME],
     package_data={ DISTNAME: files_for_setup },
     distclass=BinaryDistribution,
