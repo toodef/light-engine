@@ -13,7 +13,7 @@ jobs:
             - g++-7
             - ninja-build
       env: COMPILER=g++-7
-      script: ./build_lib
+      script: ./tools/build_lib
 
     - stage: build
       os: windows
@@ -21,7 +21,7 @@ jobs:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
       script:
         - export PATH=$MSBUILD_PATH:$PATH
-        - ./build_lib.bat
+        - ./tools/build_lib.bat
 
     - stage: build
       os: windows
@@ -31,4 +31,4 @@ jobs:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
       script:
         - export PATH=$MSBUILD_PATH:$PATH
-        - ./build_lib.bat
+        - ./tools/build_lib.bat
