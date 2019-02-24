@@ -26,20 +26,23 @@ void object_t::draw() const {
 
    buffer_->bind();
    buffer_->enable_vertex_attribs();
-
    shader_prog_->bind();
+
    if (set_uniforms_callback_)
       set_uniforms_callback_(shader_prog_);
 
+   draw_buffer();
+
+   shader_prog_->unbind();
+   buffer_->disable_vertex_attribs();
+   buffer_->unbind();
+}
+
+void object_t::draw_buffer() const {
    if (buffer_->have_idx_buffer())
       glDrawElements(convert_drawing_style(drawing_style_), buffer_->indices_number(), GL_UNSIGNED_INT, NULL);
    else
       glDrawArrays(convert_drawing_style(drawing_style_), 0, buffer_->vertices_number());
-
-   buffer_->disable_vertex_attribs();
-   buffer_->unbind();
-
-   shader_prog_->unbind();
 }
 
 void object_t::set_drawing_style(object_t::drawing_style_t drawing_style) {
@@ -50,3 +53,6 @@ void object_t::set_uniforms_callback(set_uniforms_callback_t const & callback) {
    set_uniforms_callback_ = callback;
 }
 
+object_t::set_uniforms_callback_t object_t::set_uniforms_callback() {
+   return set_uniforms_callback_;
+}

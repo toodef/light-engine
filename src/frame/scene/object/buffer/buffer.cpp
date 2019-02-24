@@ -40,6 +40,33 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & co
    calc_vertex_attribs(VDC_positions | VDC_colors_rgb);
 }
 
+buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normals, glm::vec3 const & color) :
+   vertices_number_(vertices.size()), have_idx_buffer_(false), indices_number_(0)
+{
+   glGenBuffers(1, &id_);
+   glGenVertexArrays(1, &vao_id_);
+
+   struct data_unit {
+      glm::vec3 pos, color, normal;
+   };
+
+   unsigned int count = vertices.size();
+   std::vector<data_unit> data(count);
+   unsigned int idx = 0;
+   for (unsigned int i = 0; i < vertices.size(); ++i, ++idx) {
+      data[i].pos = vertices[idx];
+      data[i].normal = normals[idx];
+      data[i].color = color;
+   }
+
+   glBindBuffer(GL_ARRAY_BUFFER, id_);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(data_unit) * vertices.size(), &data[0], GL_STATIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   calc_vertex_attribs(VDC_positions | VDC_normals | VDC_colors_rgb);
+}
+
+
 buffer_t::~buffer_t() {
    glDeleteBuffers(1, &id_);
    glDeleteVertexArrays(1, &vao_id_);

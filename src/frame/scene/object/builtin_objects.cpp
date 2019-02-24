@@ -18,7 +18,8 @@ object_ptr_t builtin_objects_t::triangle(std::vector<glm::vec3> const & vertices
 
 object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, glm::vec3 const & color, unsigned int detalisation, shader_prog_ptr_t const & shader_prog) {
    std::vector<glm::vec3> vertices(12);
-   static const std::vector<unsigned int> indices {
+   std::vector<unsigned int> index_data;
+   std::vector<unsigned int> end_index_data{
       0 , 4 , 1 ,
       0 , 9 , 4 ,
       9 , 5 , 4 ,
@@ -43,21 +44,64 @@ object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, g
    float x = 0.525731112119133606f;
    float z = 0.850650808352039932f;
 
-   vertices[0] = center + glm::normalize(glm::vec3(-x, 0, z)) * radius;
-   vertices[1] = center + glm::normalize(glm::vec3(x, 0, z)) * radius;
-   vertices[2] = center + glm::normalize(glm::vec3(-x, 0, -z)) * radius;
-   vertices[3] = center + glm::normalize(glm::vec3(x, 0, -z)) * radius;
-   vertices[4] = center + glm::normalize(glm::vec3(0, z, x)) * radius;
-   vertices[5] = center + glm::normalize(glm::vec3(0, z, -x)) * radius;
-   vertices[6] = center + glm::normalize(glm::vec3(0, -z, x)) * radius;
-   vertices[7] = center + glm::normalize(glm::vec3(0, -z, -x)) * radius;
-   vertices[8] = center + glm::normalize(glm::vec3(z, x, 0)) * radius;
-   vertices[9] = center + glm::normalize(glm::vec3(-z, x, 0)) * radius;
-   vertices[10] = center + glm::normalize(glm::vec3(z, -x, 0)) * radius;
-   vertices[11] = center + glm::normalize(glm::vec3(-z, -x, 0)) * radius;
+   vertices[0] = glm::normalize(glm::vec3(-x, 0, z));
+   vertices[1] = glm::normalize(glm::vec3(x, 0, z));
+   vertices[2] = glm::normalize(glm::vec3(-x, 0, -z));
+   vertices[3] = glm::normalize(glm::vec3(x, 0, -z));
+   vertices[4] = glm::normalize(glm::vec3(0, z, x));
+   vertices[5] = glm::normalize(glm::vec3(0, z, -x));
+   vertices[6] = glm::normalize(glm::vec3(0, -z, x));
+   vertices[7] = glm::normalize(glm::vec3(0, -z, -x));
+   vertices[8] = glm::normalize(glm::vec3(z, x, 0));
+   vertices[9] = glm::normalize(glm::vec3(-z, x, 0));
+   vertices[10] = glm::normalize(glm::vec3(z, -x, 0));
+   vertices[11] = glm::normalize(glm::vec3(-z, -x, 0));
+
+   for (size_t n = 0; n < detalisation - 1; ++n)
+   {
+      for (size_t i = 0; i < end_index_data.size() - 2; i += 3)
+      {
+         size_t i0 = end_index_data[i];
+         size_t i1 = end_index_data[i + 1];
+         size_t i2 = end_index_data[i + 2];
+
+         glm::vec3 v_m01 = glm::normalize(vertices[i0] + vertices[i1]);
+         glm::vec3 v_m12 = glm::normalize(vertices[i1] + vertices[i2]);
+         glm::vec3 v_m02 = glm::normalize(vertices[i0] + vertices[i2]);
+
+         size_t m01 = vertices.size();
+         vertices.push_back(v_m01);
+
+         size_t m12 = vertices.size();
+         vertices.push_back(v_m12);
+
+         size_t m02 = vertices.size();
+         vertices.push_back(v_m02);
+
+         index_data.push_back(i0);
+         index_data.push_back(m01);
+         index_data.push_back(m02);
+         index_data.push_back(i1);
+         index_data.push_back(m12);
+         index_data.push_back(m01);
+         index_data.push_back(i2);
+         index_data.push_back(m02);
+         index_data.push_back(m12);
+         index_data.push_back(m02);
+         index_data.push_back(m01);
+         index_data.push_back(m12);
+      }
+
+      end_index_data.clear();
+      end_index_data = index_data;
+      index_data.clear();
+   }
+
+   for (unsigned int i = 0; i < vertices.size(); ++i)
+      vertices[i] = vertices[i] * radius + center;
 
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
-   buffer->add_index_buffer(indices);
+   buffer->add_index_buffer(end_index_data);
    auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
@@ -100,6 +144,13 @@ object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & 
    buffer->add_index_buffer(indices);
    auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
    object->set_drawing_style(object_t::DS_triangles);
+   return object;
+}
+
+object_ptr_t builtin_objects_t::point_cloud(std::vector<glm::vec3> const & positions, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(positions, color);
+   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   object->set_drawing_style(object_t::DS_points);
    return object;
 }
 

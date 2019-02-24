@@ -30,8 +30,9 @@ namespace LE {
       void width(unsigned int width);
 
       glm::mat4 projection_matrix();
-      glm::mat4 world_view_matrix();
+      glm::mat4 model_view_matrix();
       glm::mat4 model_view_projection_matrix();
+      glm::mat4 normal_matrix();
 
    private:
       void set_orientation(glm::quat const & q);
@@ -39,13 +40,13 @@ namespace LE {
    private:
       glm::vec3 dir_, up_, right_, look_at_, pos_;
       glm::quat q_;
-      glm::mat4 prj_mat_, model_view_mat_, mvp_mat_;
+      glm::mat4 prj_mat_, model_view_mat_, mvp_mat_, normal_mat_;
 
       unsigned int width_, height_;
       float view_angle_, z_near_, z_far_;
 
       bool look_at_is_locked_,
-           projection_matrix_is_up_to_date_, model_view_matrix_is_up_to_date_, mvp_mat_is_up_to_date_;
+           projection_matrix_is_up_to_date_, model_view_matrix_is_up_to_date_, mvp_mat_is_up_to_date_, normal_mat_is_up_to_date_;
    };
 
    typedef std::shared_ptr<camera_t> camera_ptr_t;
