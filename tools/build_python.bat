@@ -8,6 +8,4 @@ cmake ..\..\.. -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES="OFF" -DBUILD_P
 
 msbuild /nologo /verbosity:quiet /p:Configuration=Release light-engine.sln || exit /b 1
 
-test\Release\tests.exe || exit /b 1
-
 cd ..\..\..
