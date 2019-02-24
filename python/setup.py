@@ -11,7 +11,7 @@ class BinaryDistribution(Distribution):
         return False
 
 
-DISTNAME = "pyle"
+DISTNAME = "lepy"
 
 parser = argparse.ArgumentParser(description='Build ' + DISTNAME + ' whl file. Script get bin and source directories and create whl in working directory')
 parser.add_argument('--bin-path', help='Root dir to find compiled *.pyd file', required=True)
