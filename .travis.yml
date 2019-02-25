@@ -1,5 +1,10 @@
 language: cpp
 
+matrix:
+  include:
+  - name: "Build Python 3.6 win"
+    python: "3.6"
+
 jobs:
   include:
     - stage: build
