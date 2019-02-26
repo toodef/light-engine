@@ -158,7 +158,7 @@ void shader_prog_t::uniform_variable_t::set(glm::mat4 const & data)
 {
    if (!compare_data(info_, GL_FLOAT_MAT4))
       return;
-   glUniformMatrix4fv(info_.id, 1, false, value_ptr(data));
+   glUniformMatrix4fv(info_.id, 1, false, glm::value_ptr(data));
 }
 
 bool shader_prog_t::uniform_variable_t::init() const

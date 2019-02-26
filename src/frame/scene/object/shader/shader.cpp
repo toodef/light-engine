@@ -49,7 +49,8 @@ unsigned int shader_t::id() const {
 // shader_prog_t
 //////////////////////////////////////////
 
-shader_program_exception_t::shader_program_exception_t(std::string const & message) : std::exception(message.c_str()) {}
+shader_program_exception_t::shader_program_exception_t(std::string const & message) : msg_(message) {}
+char const * shader_program_exception_t::what() const noexcept { return msg_.c_str(); }
 
 shader_prog_t::shader_prog_t(shader_ptr_t const & v_shader, shader_ptr_t const & f_shader, shader_ptr_t const & g_shader):
    vertex_shader_(v_shader), fragment_shader_(f_shader), geometry_shader_(g_shader)
