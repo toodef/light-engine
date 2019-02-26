@@ -37,3 +37,27 @@ jobs:
         - choco install python --version 3.6.8
         - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
         - ./tools/build_python.bat
+
+    - stage: build
+      os: windows
+      name: "Build Python 3.7 win"
+      python: 3.7
+      env:
+        - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+        - PYTHON=3.7
+      script:
+        - choco install python --version 3.7.2
+        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - ./tools/build_python.bat
+
+    - stage: build
+      os: windows
+      name: "Build Python 3.5 win"
+      python: 3.5
+      env:
+        - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+        - PYTHON=3.5
+      script:
+        - choco install python --version 3.5.5
+        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - ./tools/build_python.bat

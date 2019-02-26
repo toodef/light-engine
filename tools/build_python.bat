@@ -9,8 +9,6 @@ call ..\..\..\tools\install_deps_lib.bat
 git clone https://github.com/pybind/pybind11.git
 set PYBIND11_DIR=%CD%\pybind11
 
-echo %PATH%
-
 cmake ..\..\.. -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES="OFF" -DBUILD_PYTHON="ON" -DVERSION="0.0.2" || exit /b 1
 msbuild /nologo /verbosity:quiet /p:Configuration=Release Project.sln || exit /b 1
 
