@@ -1,20 +1,5 @@
 language: cpp
 
-matrix:
-  allow_failures:
-    - python: 3.5
-    - python: 3.6
-  include:
-    - python: 3.5
-      env: PY=py
-      before_install: choco install python --version 3.5.4
-    - python: 3.6
-      env: PY=py
-      before_install: choco install python --version 3.6.8
-    - python: 3.7
-      env: PY=py
-      before_install: choco install python
-
 jobs:
   include:
     - stage: build
@@ -49,6 +34,6 @@ jobs:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
         - PYTHON=3.6
       script:
-        - export PATH=$MSBUILD_PATH:$PATH
         - choco install python --version 3.6.8
+        - export PATH=C:\Python36:$MSBUILD_PATH:$PATH
         - ./tools/build_python.bat
