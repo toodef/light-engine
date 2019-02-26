@@ -35,5 +35,5 @@ jobs:
         - PYTHON=3.6
       script:
         - choco install python --version 3.6.8
-        - export PATH=C:\Python36:$MSBUILD_PATH:$PATH
+        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
         - ./tools/build_python.bat
