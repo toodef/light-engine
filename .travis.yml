@@ -1,9 +1,19 @@
 language: cpp
 
 matrix:
+  allow_failures:
+    - python: 3.5
+    - python: 3.6
   include:
-  - name: "Build Python 3.6 win"
-    python: "3.6"
+    - python: 3.5
+      env: PY=py
+      before_install: choco install python --version 3.5.4
+    - python: 3.6
+      env: PY=py
+      before_install: choco install python --version 3.6.8
+    - python: 3.7
+      env: PY=py
+      before_install: choco install python
 
 jobs:
   include:
