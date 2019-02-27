@@ -70,6 +70,8 @@ jobs:
         - choco install python --version 3.5.4
         - export PATH="c:\Python35":"C:\Python35\Scripts":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
+        - pip uninstall setuptools
+        - pip install setuptools
         - pip uninstall wheel
         - pip install wheel
         - ./tools/build_python.bat
