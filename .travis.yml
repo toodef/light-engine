@@ -36,7 +36,10 @@ jobs:
       script:
         - choco install python --version 3.6.8
         - export PATH="c:\Python36":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
+        - python -c "import setuptools; print(setuptools.__version__)"
         - pip install argparse setuptools
+        - python -m pip install --upgrade pip
+        - python -c "import setuptools; print(setuptools.__version__)"
         - ./tools/build_python.bat
         - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
