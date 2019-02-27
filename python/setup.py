@@ -97,7 +97,7 @@ files_for_setup = dll_names + ["__init__.py"]
 
 print(files_for_setup)
 
-with open(os.path.join('..', "README.md"), "r") as fh:
+with open(os.path.join(root_dir, "README.md"), "r") as fh:
    long_description = fh.read()
 
 setup(
