@@ -36,9 +36,8 @@ jobs:
       script:
         - choco install python --version 3.6.8
         - export PATH="c:\Python36":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
-        - python -c "import setuptools; print(setuptools.__version__)"
         - pip install argparse setuptools
-        - python -m pip install --upgrade pip
+        - pip install --upgarde setuptools wheel virtualenv
         - python -c "import setuptools; print(setuptools.__version__)"
         - ./tools/build_python.bat
         - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
@@ -54,6 +53,7 @@ jobs:
         - choco install python --version 3.7.2
         - export PATH="c:\Python37":"C:\Python37\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
+        - pip install --upgarde setuptools wheel virtualenv
         - ./tools/build_python.bat
         - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
@@ -68,5 +68,6 @@ jobs:
         - choco install python --version 3.5.4
         - export PATH="c:\Python35":"C:\Python35\Scripts":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
+        - pip install --upgarde setuptools wheel virtualenv
         - ./tools/build_python.bat
         - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
