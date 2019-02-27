@@ -62,8 +62,8 @@ jobs:
     - pip install wheel
     - "./tools/build_python.bat"
     - dir bin
-    - dir Release
-    - dir dist
+    - dir bin/Release
+    - dir bin/Release/dist
     deploy:
       provider: releases
       api_key:
