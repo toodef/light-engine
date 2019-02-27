@@ -95,6 +95,7 @@ jobs:
   - stage: build
     os: windows
     name: Windows lib
+    script: "./tools/build_lib.sh"
     env:
     - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
     script:
@@ -161,7 +162,6 @@ jobs:
     - pip uninstall wheel
     - pip install wheel
     - "./tools/build_python.bat"
-    - dir bin/dist
     deploy:
       provider: releases
       api_key:
