@@ -1,8 +1,8 @@
 @echo off
 
-if not exist "artifacts" mkdir artifacts && cd artifacts
-if not exist "win" mkdir win && cd win
-if not exist "lib" mkdir lib && cd lib
+if not exist "artifacts" mkdir artifacts & cd artifacts
+if not exist "win" mkdir win & cd win
+if not exist "lib" mkdir lib & cd lib
 
 call ..\..\..\tools\install_deps_lib.bat
 
