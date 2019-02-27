@@ -125,7 +125,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules'
-   ]#,
-#   distclass=BinaryDistribution,
-#   cmdclass={'bdist_wheel': bdist_wheel}
+   ],
+   distclass=BinaryDistribution,
+   cmdclass={'bdist_wheel': bdist_wheel}
 )
