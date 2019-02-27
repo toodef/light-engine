@@ -19,7 +19,8 @@ camera_t::camera_t(glm::vec3 const & pos, glm::vec3 const & dir, glm::vec3 const
 }
 
 void camera_t::rotate(float angle, glm::vec3 const & axis) {
-   glm::quat rotate = glm::rotate(glm::quat(), angle, axis);
+   static const glm::quat q = glm::quat(1, 0, 0, 0);
+   glm::quat rotate = glm::rotate(q, angle, axis);
    set_orientation(rotate);
 }
 
