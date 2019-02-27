@@ -41,7 +41,7 @@ jobs:
         - pip install wheel
         - python -c "import setuptools; print(setuptools.__version__)"
         - ./tools/build_python.bat
-        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
+#        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
     - stage: build
       os: windows
@@ -57,7 +57,7 @@ jobs:
         - pip uninstall wheel
         - pip install wheel
         - ./tools/build_python.bat
-        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
+#        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
     - stage: build
       os: windows
@@ -70,9 +70,9 @@ jobs:
         - choco install python --version 3.5.4
         - export PATH="c:\Python35":"C:\Python35\Scripts":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
-        - pip uninstall setuptools
-        - pip install setuptools
+        - pip uninstall -y setuptools
+        - pip install -y setuptools
         - pip uninstall wheel
         - pip install wheel
         - ./tools/build_python.bat
-        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
+#        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
