@@ -35,7 +35,7 @@ jobs:
         - PYTHON=3.6
       script:
         - choco install python --version 3.6.8
-        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - export PATH="c:\Python36":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install argparse
         - ./tools/build_python.bat
 
@@ -48,7 +48,7 @@ jobs:
         - PYTHON=3.7
       script:
         - choco install python --version 3.7.2
-        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - export PATH="c:\Python37":"C:\Python37\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
         - ./tools/build_python.bat
 
@@ -60,7 +60,7 @@ jobs:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
         - PYTHON=3.5
       script:
-        - choco install python --version 3.5.5
-        - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - choco install python --version 3.5.4
+        - export PATH="c:\Python35":"C:\Python35\Scripts":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
         - ./tools/build_python.bat
