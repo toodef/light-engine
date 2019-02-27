@@ -121,7 +121,6 @@ jobs:
         repo: toodef/light-engine
       draft: true
 
-
   - stage: build
     os: windows
     name: Windows Python 3.6
