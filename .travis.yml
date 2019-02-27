@@ -36,8 +36,9 @@ jobs:
       script:
         - choco install python --version 3.6.8
         - export PATH="c:\Python36":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
-        - pip install argparse
+        - pip install argparse setuptools
         - ./tools/build_python.bat
+        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
     - stage: build
       os: windows
@@ -51,6 +52,7 @@ jobs:
         - export PATH="c:\Python37":"C:\Python37\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
         - ./tools/build_python.bat
+        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
 
     - stage: build
       os: windows
@@ -64,3 +66,4 @@ jobs:
         - export PATH="c:\Python35":"C:\Python35\Scripts":"C:\Python36\Scripts":$MSBUILD_PATH:$PATH
         - pip install setuptools argparse
         - ./tools/build_python.bat
+        - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
