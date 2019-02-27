@@ -36,6 +36,9 @@ jobs:
       script:
         - choco install python --version 3.6.8
         - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - curl -OL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        - python get-pip.py
+        - pip install setuptools argparse 
         - ./tools/build_python.bat
 
     - stage: build
@@ -48,6 +51,9 @@ jobs:
       script:
         - choco install python --version 3.7.2
         - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - curl -OL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        - python get-pip.py
+        - pip install setuptools argparse 
         - ./tools/build_python.bat
 
     - stage: build
@@ -60,4 +66,7 @@ jobs:
       script:
         - choco install python --version 3.5.5
         - export PATH="c:\Python36":$MSBUILD_PATH:$PATH
+        - curl -OL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        - python get-pip.py
+        - pip install setuptools argparse 
         - ./tools/build_python.bat
