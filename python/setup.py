@@ -27,6 +27,8 @@ print('  source-path: ' + args.source_path)
 print('  version: ' + args.version)
 print('Working directory: ' + str(sys.argv))
 
+root_dir = os.path.abspath(os.path.join(sys.argv[0], os.pardir, os.pardir))
+
 if not os.path.exists(args.bin_path):
       print('bin-path options points to nonexistent directory', file=sys.stderr)
       sys.exit(1)
