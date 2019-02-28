@@ -31,9 +31,9 @@ include_directories(${GLM_ROOT})
 
 if (WIN32)
         if (DEFINED ENV{GLEW_ROOT})
-        set(GLEW_ROOT $ENV{GLEW_ROOT})
+                set(GLEW_ROOT $ENV{GLEW_ROOT})
         elseif()
-        message(FATAL_ERROR "Please set GLEW_ROOT environment variable")
+                message(FATAL_ERROR "Please set GLEW_ROOT environment variable")
         endif()
         include_directories(${GLEW_ROOT}/include)
         link_directories(${GLEW_ROOT}/lib/Release/x64)
@@ -44,6 +44,7 @@ if (UNIX)
         include_directories(${GLEW_INCLUDE_DIRS})
         link_libraries(${GLEW_LIBRARIES})
 endif()
+
 
 add_subdirectory(src)
 

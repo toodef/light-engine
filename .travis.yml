@@ -35,11 +35,12 @@ jobs:
         - g++-7
         - ninja-build
     env: COMPILER=g++-7
+    before_script:
+    - chmod +x tools/build_examples.sh
     script:
     - sudo apt-get install libglm-dev libglew-dev freeglut3-dev
     - "./tools/build_examples.sh"
     - cd bin/Release/ && tar -czf linux_examples.tar.gz *
-
     deploy:
       provider: releases
       api_key:
@@ -51,6 +52,38 @@ jobs:
         repo: toodef/light-engine
       draft: true
 
+  - stage: build
+    name: Linux Python 3.6
+    os: linux
+    sudo: required
+    dist: trusty
+    python: 3.6
+    before_install: false
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-7
+        - ninja-build
+    env:
+    - COMPILER=g++-7
+    - PYTHON=3.6
+    before_script:
+    - chmod +x tools/build_lib.sh
+    script:
+    - sudo apt-get install libglm-dev libglew-dev python3.6
+    - "./tools/build_python.sh"      
+    deploy:
+      provider: releases
+      api_key:
+        secure: s+dcD1Zs8GOJTH58D0cmHYvXoeFDzlxBYrhMaioqeTibJqNJPIcSC2rPt9DuqH7L+j33NMMLgVX3cfwiDbGnP+2v1tL2eY+QbIXhTnlLbx+t/rwy6uqap5Y5PpZqErHZodEdjjnfL1+beX1JC2yY9B5YokezSSwuiRTh3NQpF+F8wmy3fN46hb0H1TSga400fW4lNunhZzy6zMNraclZ9AWQAiQhYuH900Ov2Act0BbzHd8ri6BsOcpDM1cJgM98P9i3xM7SbZdyM3PayWeH/cV35L5JBMvvDJeSg91nBV3hY5IOaLqknO7iCYpsZMmx+lDINcFzO9C0iliZhsmJgAO8C93F+rNesHYAuZ7UY+sqXz+DGFa+ycORRRk7KvlRvyFFYTF3AptE5PqNcnSPVqj0ixz/14EFRYsI2t90u5d8JCKO9KpKM0KoluUt3IjSsVcpYEKojXankqCGPmQ/kfbWSEGDc9Jyxq0P8bGzLf6VR1JiQX//sEOQDSQfBTDAlISjS6PLeL06kvX3zi2vmfUsMvAFxGIh99gSQK1E18Lq+bYuic/KvjLgv0LWZ1PcQeYf8elEt0BsMRP4d+D+0O/+t2YK+OPbhzzojMEgtB9h90q7Kakh2VPjSif8txUTkgPnI5tC6zkwiJ0WFUCMp79KsBkwopVVOgKksIUobpk=
+      skip_cleanup: true
+      file_glob: true
+      file: bin/Release/dist/lrpy-*.whl
+      on:
+        repo: toodef/light-engine
+      draft: true
 
   - stage: build
     os: windows
@@ -70,6 +103,9 @@ jobs:
     - export PATH=$MSBUILD_PATH:$PATH
     - "./tools/build_examples.bat"
     - cd bin/Release/ && 7z a win_examples.zip *
+    - dir bin
+    - dir bin/Release
+    - dir 
     deploy:
       provider: releases
       api_key:
