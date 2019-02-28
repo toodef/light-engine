@@ -87,8 +87,8 @@ jobs:
     - python -m pip install --upgrade pip
     - pip install setuptools argparse
     - pip uninstall -y setuptools
-    - pip install -y setuptools
-    - pip uninstall wheel
+    - pip install setuptools
+    - pip uninstall -y wheel
     - pip install wheel
     - "./tools/build_python.bat"
     - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
