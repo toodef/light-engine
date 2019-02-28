@@ -68,7 +68,7 @@ jobs:
     - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
     script:
     - export PATH=$MSBUILD_PATH:$PATH
-    - "./tools/build_lib.bat"
+    - "./tools/build_examples.bat"
     - cd bin/Release/ && 7z a win_examples.zip *
     deploy:
       provider: releases
@@ -84,7 +84,7 @@ jobs:
 
   - stage: build
     os: windows
-    name: Windosw Python 3.6
+    name: Windows Python 3.6
     python: 3.6
     env:
     - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
@@ -136,7 +136,7 @@ jobs:
 
   - stage: build
     os: windows
-    name: Windows Python 3.5 win
+    name: Windows Python 3.5
     python: 3.5
     env:
     - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
