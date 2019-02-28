@@ -15,6 +15,8 @@ jobs:
         - g++-7
         - ninja-build
     env: COMPILER=g++-7
+    before_script:
+    - chmod +x tools/build_lib.sh
     script:
     - sudo apt-get install libglm-dev libglew-dev
     - "./tools/build_lib.sh"
