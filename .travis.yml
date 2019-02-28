@@ -91,3 +91,4 @@ jobs:
     - pip uninstall wheel
     - pip install wheel
     - "./tools/build_python.bat"
+    - python C:/Users/travis/build/toodef/light-engine/python/setup.py --version 0.0.2 --bin-path C:/Users/travis/build/toodef/light-engine/bin --source-path C:/Users/travis/build/toodef/light-engine/python
