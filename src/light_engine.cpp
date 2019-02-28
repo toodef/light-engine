@@ -6,7 +6,7 @@ using namespace LE;
 
 #ifndef VERSION
 const std::string light_engine_t::version = "No version defined";
-#elif
+#else
 const std::string light_engine_t::version = VERSION;
 #endif
 
