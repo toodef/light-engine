@@ -14,7 +14,11 @@ jobs:
         - g++-7
         - ninja-build
     env: COMPILER=g++-7
-    script: "./tools/build_lib.sh"
+    script:
+    - sudo apt-get install libglm-dev
+    - sudo apt-get install libglew-dev
+    - "./tools/build_lib.sh"
+
   - stage: build
     os: windows
     name: Build lib win

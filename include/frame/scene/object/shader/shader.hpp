@@ -26,6 +26,10 @@ namespace LE {
 
    struct shader_program_exception_t: std::exception {
       shader_program_exception_t(std::string const & message);
+      virtual char const * what() const noexcept;
+
+   private:
+      std::string msg_;
    };
 
    class shader_prog_t;
