@@ -42,7 +42,9 @@ jobs:
       provider: releases
       api_key:
         secure: s+dcD1Zs8GOJTH58D0cmHYvXoeFDzlxBYrhMaioqeTibJqNJPIcSC2rPt9DuqH7L+j33NMMLgVX3cfwiDbGnP+2v1tL2eY+QbIXhTnlLbx+t/rwy6uqap5Y5PpZqErHZodEdjjnfL1+beX1JC2yY9B5YokezSSwuiRTh3NQpF+F8wmy3fN46hb0H1TSga400fW4lNunhZzy6zMNraclZ9AWQAiQhYuH900Ov2Act0BbzHd8ri6BsOcpDM1cJgM98P9i3xM7SbZdyM3PayWeH/cV35L5JBMvvDJeSg91nBV3hY5IOaLqknO7iCYpsZMmx+lDINcFzO9C0iliZhsmJgAO8C93F+rNesHYAuZ7UY+sqXz+DGFa+ycORRRk7KvlRvyFFYTF3AptE5PqNcnSPVqj0ixz/14EFRYsI2t90u5d8JCKO9KpKM0KoluUt3IjSsVcpYEKojXankqCGPmQ/kfbWSEGDc9Jyxq0P8bGzLf6VR1JiQX//sEOQDSQfBTDAlISjS6PLeL06kvX3zi2vmfUsMvAFxGIh99gSQK1E18Lq+bYuic/KvjLgv0LWZ1PcQeYf8elEt0BsMRP4d+D+0O/+t2YK+OPbhzzojMEgtB9h90q7Kakh2VPjSif8txUTkgPnI5tC6zkwiJ0WFUCMp79KsBkwopVVOgKksIUobpk=
-      file: bin\dist\lepy-*.whl
+      skip_cleanup: true
+      file_glob: true
+      file: bin/dist/lepy-*.whl
       on:
         repo: toodef/light-engine
       draft: true
@@ -61,13 +63,13 @@ jobs:
     - pip uninstall wheel
     - pip install wheel
     - "./tools/build_python.bat"
-    - dir bin
     - dir bin/dist
     deploy:
       provider: releases
       api_key:
         secure: s+dcD1Zs8GOJTH58D0cmHYvXoeFDzlxBYrhMaioqeTibJqNJPIcSC2rPt9DuqH7L+j33NMMLgVX3cfwiDbGnP+2v1tL2eY+QbIXhTnlLbx+t/rwy6uqap5Y5PpZqErHZodEdjjnfL1+beX1JC2yY9B5YokezSSwuiRTh3NQpF+F8wmy3fN46hb0H1TSga400fW4lNunhZzy6zMNraclZ9AWQAiQhYuH900Ov2Act0BbzHd8ri6BsOcpDM1cJgM98P9i3xM7SbZdyM3PayWeH/cV35L5JBMvvDJeSg91nBV3hY5IOaLqknO7iCYpsZMmx+lDINcFzO9C0iliZhsmJgAO8C93F+rNesHYAuZ7UY+sqXz+DGFa+ycORRRk7KvlRvyFFYTF3AptE5PqNcnSPVqj0ixz/14EFRYsI2t90u5d8JCKO9KpKM0KoluUt3IjSsVcpYEKojXankqCGPmQ/kfbWSEGDc9Jyxq0P8bGzLf6VR1JiQX//sEOQDSQfBTDAlISjS6PLeL06kvX3zi2vmfUsMvAFxGIh99gSQK1E18Lq+bYuic/KvjLgv0LWZ1PcQeYf8elEt0BsMRP4d+D+0O/+t2YK+OPbhzzojMEgtB9h90q7Kakh2VPjSif8txUTkgPnI5tC6zkwiJ0WFUCMp79KsBkwopVVOgKksIUobpk=
-      file: bin/dist/lepy-*.whl
+      skip_cleanup: true
+      file: bin/dist/lepy-0.0.2-cp37-cp37m-win_amd64.whl
       on:
         repo: toodef/light-engine
       draft: true
