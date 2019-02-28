@@ -40,7 +40,12 @@ jobs:
     script:
     - sudo apt-get install libglm-dev libglew-dev freeglut3-dev
     - "./tools/build_examples.sh"
-    - cd bin/Release/ && ls && tar -czf linux_examples.tar.gz * && cd ../..
+    - cd bin/Release/
+    - ls
+    - pwd
+    - ls build
+    - tar -czf linux_examples.tar.gz *
+    - cd ../..
     deploy:
       provider: releases
       api_key:
@@ -72,7 +77,8 @@ jobs:
     before_script:
     - chmod +x tools/build_python.sh
     script:
-    - sudo apt install libglm-dev libglew-dev python3.6
+    - sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt-get update
+    - sudo apt-get install libglm-dev libglew-dev python3.6
     - "./tools/build_python.sh"      
     deploy:
       provider: releases
