@@ -4,19 +4,22 @@
 
 using namespace LE;
 
-frame_t::frame_t() : depth_test_enabled_(true) {}
+frame_t::frame_t() :
+     depth_test_enabled_(true)
+   , background_color_(0, 0, 0)
+{}
 
 void frame_t::add_scene(scene_ptr_t const & scene){
    scenes_.push_back(scene);
 }
 
 void frame_t::set_background_color(glm::vec3 const & color) {
-   glClearColor(color[0], color[1], color[2], 1);
+   background_color_ = color;
 }
 
 // TODO: make min coordinates non-zero
-void frame_t::resize(unsigned int width, unsigned int height) {
-   glViewport(0, 0, width, height);
+void frame_t::resize(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
+   x_ = x; y_ = y; height_ = height; width_ = width;
 
    for (auto const & scene : scenes_) {
       scene->get_camera()->width(width);
@@ -27,7 +30,12 @@ void frame_t::resize(unsigned int width, unsigned int height) {
 void frame_t::enable_depth_test(bool is_enable) { depth_test_enabled_ = is_enable; };
 
 void frame_t::draw() {
+   glViewport(x_, y_, width_, height_);
+   glEnable(GL_SCISSOR_TEST);
+   glScissor(x_, y_, width_, height_);
+   glClearColor(background_color_.x, background_color_.y, background_color_.z, 1);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glDisable(GL_SCISSOR_TEST);
    glDepthFunc(GL_LEQUAL);
    
    if (depth_test_enabled_)
