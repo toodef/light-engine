@@ -8,3 +8,5 @@ bin/*
 lib/*
 */pybind11/*
 artifacts
+.vscode
+
