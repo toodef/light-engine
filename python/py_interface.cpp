@@ -31,20 +31,35 @@ PYBIND11_MODULE(lepy, m) {
       .def_readwrite("y", &glm::vec3::y)
       .def_readwrite("z", &glm::vec3::z);
 
+   py::class_<glm::vec2>(m, "Vec2")
+      .def(py::init<float, float>())
+      .def(py::self + py::self)
+      .def(py::self - py::self)
+      .def(py::self += py::self)
+      .def(py::self -= py::self)
+      .def(float() * py::self)
+      .def(py::self * float())
+      .def(py::self / float())
+      .def(py::self * py::self)
+      .def(-py::self)
+      .def("__str__", [](glm::vec2 const * v) { std::ostringstream res; res << "[" << v->x << ", " << v->y << "]"; return res.str(); })
+      .def_readwrite("x", &glm::vec2::x)
+      .def_readwrite("y", &glm::vec2::y);
+
    py::class_<glm::mat4>(m, "Mat4");
 
    py::class_<LE::light_engine_t>(m, "Engine")
       .def(py::init<>())
       .def("resize", &LE::light_engine_t::resize, py::arg("height"), py::arg("width"), "Resize render window")
       .def("redraw", &LE::light_engine_t::redraw, "Draw frame")
-      .def("add_frame", &LE::light_engine_t::add_frame, py::arg("frame"), "Add frame to render window")
+      .def("add_frame", &LE::light_engine_t::add_frame, py::arg("frame"), py::arg("pos") = glm::vec2(0, 0), py::arg("size") = glm::vec2(1, 1), "Add frame to render window")
       .def_readonly_static("__version__", &LE::light_engine_t::version, "Version of the build");
 
    py::class_<LE::frame_t, LE::frame_ptr_t>(m, "Frame")
       .def(py::init<>())
       .def("set_background_color", &LE::frame_t::set_background_color, py::arg("background color"), "Set background color")
       .def("draw", &LE::frame_t::set_background_color, "Draw frame")
-      .def("resize", &LE::frame_t::resize, py::arg("width"), py::arg("height"), "Resize frame")
+      .def("resize", &LE::frame_t::resize, py::arg("x"), py::arg("y"), py::arg("width"), py::arg("height"), "Resize frame")
       .def("enable_depth_test", &LE::frame_t::enable_depth_test, py::arg("is_enable"), "Enable depth test for frame. Default: true")
       .def("add_scene", &LE::frame_t::add_scene, py::arg("scene"), "Add scene to frame");
 

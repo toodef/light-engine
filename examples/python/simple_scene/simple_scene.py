@@ -1,6 +1,6 @@
 from random import uniform
 
-import pyle
+import lepy
 from PySide2Wrapper.PySide2Wrapper.window import MainWindow
 from PySide2Wrapper.PySide2Wrapper.widget import OpenGLWidget
 from PySide2Wrapper.PySide2Wrapper.app import Application
@@ -12,18 +12,18 @@ class SimpleScene:
         self.user_camera = None
 
     def init(self):
-        self.engine = pyle.Engine()
-        frame = pyle.Frame()
-        scene = pyle.Scene()
+        self.engine = lepy.Engine()
+        frame = lepy.Frame()
+        scene = lepy.Scene()
         frame.add_scene(scene)
         self.engine.add_frame(frame)
-        self.user_camera = pyle.UserMouseCamera(scene.get_camera())
-        frame.set_background_color(pyle.Vec3(0, 0, 0))
-        scene.get_camera().look_at(pyle.Vec3(0, 0, 0))
+        self.user_camera = lepy.UserMouseCamera(scene.get_camera())
+        frame.set_background_color(lepy.Vec3(0, 0, 0))
+        scene.get_camera().look_at(lepy.Vec3(0, 0, 0))
 
         for i in range(1000):
-            obj = pyle.BuiltinObjects.point(pyle.Vec3(uniform(-0.5, 0.5), uniform(-0.5, 0.5), uniform(-0.5, 0.5)),
-                                            pyle.Vec3(uniform(0, 1), uniform(0, 1), uniform(0, 1)))
+            obj = lepy.BuiltinObjects.point(lepy.Vec3(uniform(-0.5, 0.5), uniform(-0.5, 0.5), uniform(-0.5, 0.5)),
+                                            lepy.Vec3(uniform(0, 1), uniform(0, 1), uniform(0, 1)))
             scene.add_object(obj)
 
     def resize(self, w, h):

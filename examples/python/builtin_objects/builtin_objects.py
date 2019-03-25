@@ -1,6 +1,6 @@
 from random import uniform
 
-import pyle
+import lepy
 from PySide2Wrapper.PySide2Wrapper.window import MainWindow
 from PySide2Wrapper.PySide2Wrapper.widget import OpenGLWidget
 from PySide2Wrapper.PySide2Wrapper.app import Application
@@ -14,50 +14,50 @@ class SimpleScene:
         self.user_camera = None
 
     def init(self):
-        self.engine = pyle.Engine()
-        frame = pyle.Frame()
-        scene = pyle.Scene()
+        self.engine = lepy.Engine()
+        frame = lepy.Frame()
+        scene = lepy.Scene()
         frame.add_scene(scene)
         self.engine.add_frame(frame)
-        self.user_camera = pyle.UserMouseCamera(scene.get_camera())
-        frame.set_background_color(pyle.Vec3(0, 0, 0))
-        scene.get_camera().pos(pyle.Vec3(0, 0, -3))
-        scene.get_camera().look_at(pyle.Vec3(0, 0, 0))
+        self.user_camera = lepy.UserMouseCamera(scene.get_camera())
+        frame.set_background_color(lepy.Vec3(0, 0, 0))
+        scene.get_camera().pos(lepy.Vec3(0, 0, -3))
+        scene.get_camera().look_at(lepy.Vec3(0, 0, 0))
 
         min_coord = self.__calc_cur_cell_min_coord(0, 0)
         for i in range(10):
-            scene.add_object(pyle.BuiltinObjects.point(pyle.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
-                                                       pyle.Vec3(0, 1, 0)))
+            scene.add_object(lepy.BuiltinObjects.point(lepy.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
+                                                       lepy.Vec3(0, 1, 0)))
 
         min_coord = self.__calc_cur_cell_min_coord(1, 0)
         for i in range(2):
             triangle_vertices = []
             for j in range(3):
-                triangle_vertices.append(pyle.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5))
-            scene.add_object(pyle.BuiltinObjects.triangle(triangle_vertices, pyle.Vec3(1, 0, 0)))
+                triangle_vertices.append(lepy.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5))
+            scene.add_object(lepy.BuiltinObjects.triangle(triangle_vertices, lepy.Vec3(1, 0, 0)))
 
         min_coord = self.__calc_cur_cell_min_coord(0, 1)
-        scene.add_object(pyle.BuiltinObjects.sphere(pyle.Vec3(min_coord[0] + 0.5, min_coord[1] + 0.5, 0.5), 0.5, pyle.Vec3(1, 1, 1), 2))
+        scene.add_object(lepy.BuiltinObjects.sphere(lepy.Vec3(min_coord[0] + 0.5, min_coord[1] + 0.5, 0.5), 0.5, lepy.Vec3(1, 1, 1), 2))
 
         min_coord = self.__calc_cur_cell_min_coord(1, 1)
         quad_vertices = [
-            pyle.Vec3(min_coord[0], min_coord[1], 0),
-            pyle.Vec3(min_coord[0], min_coord[1] + 1, 0),
-            pyle.Vec3(min_coord[0] + 1, min_coord[1] + 1, 0),
-            pyle.Vec3(min_coord[0] + 1, min_coord[1], 0)
+            lepy.Vec3(min_coord[0], min_coord[1], 0),
+            lepy.Vec3(min_coord[0], min_coord[1] + 1, 0),
+            lepy.Vec3(min_coord[0] + 1, min_coord[1] + 1, 0),
+            lepy.Vec3(min_coord[0] + 1, min_coord[1], 0)
         ]
-        scene.add_object(pyle.BuiltinObjects.quad(quad_vertices, pyle.Vec3(0, 0, 1)))
+        scene.add_object(lepy.BuiltinObjects.quad(quad_vertices, lepy.Vec3(0, 0, 1)))
 
         min_coord = self.__calc_cur_cell_min_coord(2, 0)
-        scene.add_object(pyle.BuiltinObjects.box(pyle.Vec3(min_coord[0] + 0.5, min_coord[1] + 0.5, 0),
-                                                 pyle.Vec3(0, 0.5, 0), pyle.Vec3(0.5, 0, 0), pyle.Vec3(0, 0, 0.5),
-                                                 pyle.Vec3(1, 0, 1)))
+        scene.add_object(lepy.BuiltinObjects.box(lepy.Vec3(min_coord[0] + 0.5, min_coord[1] + 0.5, 0),
+                                                 lepy.Vec3(0, 0.5, 0), lepy.Vec3(0.5, 0, 0), lepy.Vec3(0, 0, 0.5),
+                                                 lepy.Vec3(1, 0, 1)))
 
         min_coord = self.__calc_cur_cell_min_coord(2, 1)
         for i in range(5):
-            scene.add_object(pyle.BuiltinObjects.line(pyle.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
-                                                      pyle.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
-                                                      pyle.Vec3(1, 1, 0)))
+            scene.add_object(lepy.BuiltinObjects.line(lepy.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
+                                                      lepy.Vec3(uniform(0, 1) + min_coord[0], uniform(0, 1) + min_coord[1], uniform(0, 1) - 0.5),
+                                                      lepy.Vec3(1, 1, 0)))
 
     def resize(self, w, h):
         self.engine.resize(w, h)

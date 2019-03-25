@@ -1,27 +1,27 @@
 from random import uniform
 
-import pyle
+import lepy
 from PySide2Wrapper.PySide2Wrapper.window import MainWindow
 from PySide2Wrapper.PySide2Wrapper.widget import OpenGLWidget
 from PySide2Wrapper.PySide2Wrapper.app import Application
 
 
-class LELogo(pyle.Object):
+class LELogo(lepy.Object):
     def __init__(self, camera):
-        l_offset = pyle.Vec3(-0.5, -0.5, 0)
+        l_offset = lepy.Vec3(-0.5, -0.5, 0)
         vertices = [
             # E word
-            pyle.Vec3(0, 0, 0), pyle.Vec3(1, 0, 0), pyle.Vec3(1, 0.4, 0), pyle.Vec3(0.4, 0.4, 0),
-            pyle.Vec3(0.4, 1 - 0.2, 0), pyle.Vec3(0.7, 1 - 0.2, 0), pyle.Vec3(0.7, 1 + 0.2, 0), pyle.Vec3(0.4, 1 + 0.2, 0),
-            pyle.Vec3(0.4, 1.6, 0), pyle.Vec3(1, 1.6, 0), pyle.Vec3(1, 2, 0), pyle.Vec3(0, 2, 0),
+            lepy.Vec3(0, 0, 0), lepy.Vec3(1, 0, 0), lepy.Vec3(1, 0.4, 0), lepy.Vec3(0.4, 0.4, 0),
+            lepy.Vec3(0.4, 1 - 0.2, 0), lepy.Vec3(0.7, 1 - 0.2, 0), lepy.Vec3(0.7, 1 + 0.2, 0), lepy.Vec3(0.4, 1 + 0.2, 0),
+            lepy.Vec3(0.4, 1.6, 0), lepy.Vec3(1, 1.6, 0), lepy.Vec3(1, 2, 0), lepy.Vec3(0, 2, 0),
 
             # L word
-            pyle.Vec3(0, 0, 0) + l_offset, pyle.Vec3(1, 0, 0) + l_offset, pyle.Vec3(1, 0.4, 0) + l_offset,
-            pyle.Vec3(0.4, 0.4, 0) + l_offset, pyle.Vec3(0.4, 2, 0) + l_offset,
-            pyle.Vec3(0, 2, 0) + l_offset
+            lepy.Vec3(0, 0, 0) + l_offset, lepy.Vec3(1, 0, 0) + l_offset, lepy.Vec3(1, 0.4, 0) + l_offset,
+            lepy.Vec3(0.4, 0.4, 0) + l_offset, lepy.Vec3(0.4, 2, 0) + l_offset,
+            lepy.Vec3(0, 2, 0) + l_offset
             ]
 
-        normales = [pyle.Vec3(0, 0, 1) for i in range(len(vertices))]
+        normales = [lepy.Vec3(0, 0, 1) for i in range(len(vertices))]
 
         indices = [
             # E word
@@ -40,14 +40,14 @@ class LELogo(pyle.Object):
             12 + 0, 12 + 4, 12 + 5
         ]
 
-        buffer = pyle.Buffer(vertices, normales, pyle.Vec3(0, 1, 0))
+        buffer = lepy.Buffer(vertices, normales, lepy.Vec3(0, 1, 0))
         buffer.add_index_buffer(indices)
 
-        shader_prog = pyle.ShaderProg(pyle.Shader(self.get_vertex_shader_src(), pyle.Shader.ShaderType.VERTEX),
-                                           pyle.Shader(self.get_fragment_shader_src(), pyle.Shader.ShaderType.FRAGMENT))
+        shader_prog = lepy.ShaderProg(lepy.Shader(self.get_vertex_shader_src(), lepy.Shader.ShaderType.VERTEX),
+                                           lepy.Shader(self.get_fragment_shader_src(), lepy.Shader.ShaderType.FRAGMENT))
 
         super().__init__(buffer, shader_prog)
-        self.set_drawing_style(pyle.Object.DrawingStyle.DS_triangles)
+        self.set_drawing_style(lepy.Object.DrawingStyle.DS_triangles)
 
         self.camera = camera
         self.set_uniforms_callback(self.uniform_callback)
@@ -56,8 +56,8 @@ class LELogo(pyle.Object):
         shader_prog.uniform_variable("mvp").set(self.camera.model_view_projection_matrix())
         shader_prog.uniform_variable("normal_matrix").set(self.camera.normal_matrix())
         shader_prog.uniform_variable("model_view").set(self.camera.model_view_matrix())
-        shader_prog.uniform_variable("light_position").set(pyle.Vec3(0, 1, 10))
-        shader_prog.uniform_variable("light_color").set(pyle.Vec3(1, 1, 1))
+        shader_prog.uniform_variable("light_position").set(lepy.Vec3(0, 1, 10))
+        shader_prog.uniform_variable("light_color").set(lepy.Vec3(1, 1, 1))
         shader_prog.uniform_variable("ambient_strength").set(0.2)
         shader_prog.uniform_variable("diffuse_strength").set(0.3)
         shader_prog.uniform_variable("specular_strength").set(0.4)
@@ -129,15 +129,15 @@ class SimpleScene:
         self.user_camera = None
 
     def init(self):
-        self.engine = pyle.Engine()
-        frame = pyle.Frame()
-        scene = pyle.Scene()
+        self.engine = lepy.Engine()
+        frame = lepy.Frame()
+        scene = lepy.Scene()
         frame.add_scene(scene)
         self.engine.add_frame(frame)
-        self.user_camera = pyle.UserMouseCamera(scene.get_camera())
-        frame.set_background_color(pyle.Vec3(0, 0, 0))
-        scene.get_camera().look_at(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 0))
-        scene.get_camera().pos(pyle.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 2))
+        self.user_camera = lepy.UserMouseCamera(scene.get_camera())
+        frame.set_background_color(lepy.Vec3(0, 0, 0))
+        scene.get_camera().look_at(lepy.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 0))
+        scene.get_camera().pos(lepy.Vec3(1.5 / 2 - 0.5, 2.5 / 2 - 0.5, 2))
 
         obj = LELogo(scene.get_camera())
         scene.add_object(obj)
