@@ -28,6 +28,7 @@ void camera_t::move(glm::vec3 const & offset) {
    pos_ += offset;
    look_at_ += offset;
    model_view_matrix_is_up_to_date_ = false;
+   mvp_mat_is_up_to_date_ = false;
 }
 
 glm::vec3 camera_t::dir() const { return dir_; }

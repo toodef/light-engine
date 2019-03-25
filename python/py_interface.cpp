@@ -177,5 +177,24 @@ PYBIND11_MODULE(lepy, m) {
             self.process_keyboard(key_buf);
          }, py::arg("key_buffer"), "Process presseg keys")
       .def("process_wheel", &LE::Utils::user_mouse_camera_t::process_wheel, py::arg("scrolls_count"), "Process mouse wheel scrolls")
-      .def("process_mouse_press", &LE::Utils::user_mouse_camera_t::process_mouse_press, py::arg("x_pos"), py::arg("y_pos"), py::arg("is_left_button"), py::arg("is_pressed"), "Detect mouse press");
+      .def("process_mouse_press", &LE::Utils::user_mouse_camera_t::process_mouse_press, py::arg("x_pos"), py::arg("y_pos"), py::arg("is_left_button"), py::arg("is_pressed"), "Detect mouse press")
+      .def("set_camera_cursour_sensetivity", &LE::Utils::user_mouse_camera_t::set_camera_cursour_sensetivity, py::arg("sensetivity"), "Change camera mouse cursour sensetivity")
+      .def("set_camera_keyboard_sensetivity", &LE::Utils::user_mouse_camera_t::set_camera_keyboard_sensetivity, py::arg("sensetivity"), "Change camera keyboard sensetivity")
+      .def("set_camera_wheel_sensetivity", &LE::Utils::user_mouse_camera_t::set_camera_wheel_sensetivity, py::arg("sensetivity"), "Change camera mouse wheel sensetivity");
+
+   py::class_<LE::Utils::user_wasd_camera_t>(m, "UserWASDCamera")
+      .def(py::init<LE::camera_ptr_t const &>())
+      .def("process_cursore_movement", &LE::Utils::user_wasd_camera_t::process_cursore_movement, py::arg("x_pos"), py::arg("y_pos"), "Process cursore movement. Need to be placed in function, that track cursore movement. Function get current cursore position")
+      .def("process_keyboard", 
+         [](LE::Utils::user_wasd_camera_t & self, std::array<bool, 256> const & key_buffer) {
+            bool key_buf[256];
+            for (unsigned int i = 0; i < 256; ++i)
+               key_buf[i] = key_buffer[i];
+            self.process_keyboard(key_buf);
+         }, py::arg("key_buffer"), "Process presseg keys")
+      .def("process_wheel", &LE::Utils::user_wasd_camera_t::process_wheel, py::arg("scrolls_count"), "Process mouse wheel scrolls")
+      .def("process_mouse_press", &LE::Utils::user_wasd_camera_t::process_mouse_press, py::arg("x_pos"), py::arg("y_pos"), py::arg("is_left_button"), py::arg("is_pressed"), "Detect mouse press")
+      .def("set_camera_cursour_sensetivity", &LE::Utils::user_wasd_camera_t::set_camera_cursour_sensetivity, py::arg("sensetivity"), "Change camera mouse cursour sensetivity")
+      .def("set_camera_keyboard_sensetivity", &LE::Utils::user_wasd_camera_t::set_camera_keyboard_sensetivity, py::arg("sensetivity"), "Change camera keyboard sensetivity")
+      .def("set_camera_wheel_sensetivity", &LE::Utils::user_wasd_camera_t::set_camera_wheel_sensetivity, py::arg("sensetivity"), "Change camera mouse wheel sensetivity");
 }
