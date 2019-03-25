@@ -15,7 +15,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices): vertices_number_(ve
    calc_vertex_attribs(VDC_positions);
 }
 
-buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & color) : 
+buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & colors) : 
    vertices_number_(vertices.size()), have_idx_buffer_(false), indices_number_(0)
 {
    glGenBuffers(1, &id_);
@@ -30,7 +30,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & co
    unsigned int idx = 0;
    for (unsigned int i = 0; i < vertices.size(); ++i) {
       data[i].pos = vertices[idx++];
-      data[i].color = color;
+      data[i].color = colors[i];
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, id_);
@@ -40,7 +40,16 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & co
    calc_vertex_attribs(VDC_positions | VDC_colors_rgb);
 }
 
-buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normals, glm::vec3 const & color) :
+buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & color) {
+   std::vector<glm::vec3> colors(vertices.size());
+
+   for (unsigned int i = 0; i < colors.size(); ++i)
+      colors[i] = color;
+
+   buffer_t(vertices, colors);
+}
+
+buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normales, std::vector<glm::vec3> const & colors) :
    vertices_number_(vertices.size()), have_idx_buffer_(false), indices_number_(0)
 {
    glGenBuffers(1, &id_);
@@ -55,8 +64,8 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec
    unsigned int idx = 0;
    for (unsigned int i = 0; i < vertices.size(); ++i, ++idx) {
       data[i].pos = vertices[idx];
-      data[i].normal = normals[idx];
-      data[i].color = color;
+      data[i].normal = normales[idx];
+      data[i].color = colors[i];
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, id_);
@@ -66,6 +75,14 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec
    calc_vertex_attribs(VDC_positions | VDC_normals | VDC_colors_rgb);
 }
 
+buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normales, glm::vec3 const & color) {
+   std::vector<glm::vec3> colors(vertices.size());
+
+   for (unsigned int i = 0; i < colors.size(); ++i)
+      colors[i] = color;
+
+   buffer_t(vertices, normales, colors);
+}
 
 buffer_t::~buffer_t() {
    glDeleteBuffers(1, &id_);

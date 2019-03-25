@@ -166,6 +166,14 @@ PYBIND11_MODULE(lepy, m) {
       .def_static("point_cloud", &LE::builtin_objects_t::point_cloud, py::arg("positions"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t())
       .def_static("line", &LE::builtin_objects_t::line, py::arg("v0"), py::arg("v1"), py::arg("color"), py::arg("shader_prog") = LE::shader_prog_ptr_t());
 
+   py::class_<LE::BuiltinObjects::point_cloud_t>(m, "PointCloud")
+      .def(py::init<std::vector<glm::vec3> const &>())
+      .def("set_color", &LE::BuiltinObjects::point_cloud_t::set_color, py::arg("color"), "Set one color for all points in cloud")
+      .def("set_colors", &LE::BuiltinObjects::point_cloud_t::set_colors, py::arg("colors"), "Set colors for every points in cloud")
+      .def("normales", &LE::BuiltinObjects::point_cloud_t::set_normales, py::arg("normales"), "Set normales for every points in cloud")
+      .def("set_shader", &LE::BuiltinObjects::point_cloud_t::set_shader_prog, py::arg("shader_prog"), "Set shader program")
+      .def("compile", &LE::BuiltinObjects::point_cloud_t::compile, "Compile object");
+
    py::class_<LE::Utils::user_mouse_camera_t>(m, "UserMouseCamera")
       .def(py::init<LE::camera_ptr_t const &>())
       .def("process_cursore_movement", &LE::Utils::user_mouse_camera_t::process_cursore_movement, py::arg("x_pos"), py::arg("y_pos"), "Process cursore movement. Need to be placed in function, that track cursore movement. Function get current cursore position")
