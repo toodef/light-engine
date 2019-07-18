@@ -46,7 +46,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, glm::vec3 const & co
    for (unsigned int i = 0; i < colors.size(); ++i)
       colors[i] = color;
 
-   buffer_t(vertices, colors);
+   new (this) buffer_t(vertices, colors);
 }
 
 buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & normales, std::vector<glm::vec3> const & colors) :
@@ -81,7 +81,7 @@ buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec
    for (unsigned int i = 0; i < colors.size(); ++i)
       colors[i] = color;
 
-   buffer_t(vertices, normales, colors);
+   new (this) buffer_t(vertices, normales, colors);
 }
 
 buffer_t::~buffer_t() {
