@@ -36,11 +36,11 @@ void user_wasd_camera_t::process_cursore_movement(int x_pos, int y_pos) {
 
 void user_wasd_camera_t::process_keyboard(bool const (&key_buffer)[256]) {
    if (key_buffer['w']) camera_->move(camera_->dir() * camera_keyboard_sensetivity_);
-   if (key_buffer['a']) camera_->move(-1 * camera_->right() * camera_keyboard_sensetivity_);
-   if (key_buffer['s']) camera_->move(-1 * camera_->dir() * camera_keyboard_sensetivity_);
+   if (key_buffer['a']) camera_->move(-1.f * camera_->right() * camera_keyboard_sensetivity_);
+   if (key_buffer['s']) camera_->move(-1.f * camera_->dir() * camera_keyboard_sensetivity_);
    if (key_buffer['d']) camera_->move(camera_->right() * camera_keyboard_sensetivity_);
    if (key_buffer['q']) camera_->move(camera_->up() * camera_keyboard_sensetivity_);
-   if (key_buffer['e']) camera_->move(-1 * camera_->up() * camera_keyboard_sensetivity_);
+   if (key_buffer['e']) camera_->move(-1.f * camera_->up() * camera_keyboard_sensetivity_);
 }
 
 user_mouse_camera_t::user_mouse_camera_t(camera_ptr_t const & camera) : user_camera_t(camera) { }
@@ -67,6 +67,6 @@ void user_mouse_camera_t::process_cursore_movement(int x_pos, int y_pos) {
 
 void user_mouse_camera_t::process_wheel(int scrolls_count) {
    glm::vec3 old_look_at = camera_->look_at();
-   camera_->move(camera_->dir() * scrolls_count * camera_wheel_sensetivity_);
+   camera_->move(camera_->dir() * float(scrolls_count) * camera_wheel_sensetivity_);
    camera_->look_at(old_look_at);
 }
