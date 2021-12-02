@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <light_engine.hpp>
 #include <gui_common.hpp>
 
@@ -42,6 +44,11 @@ static shader_prog_ptr_t create_shader_prog() {
 
 
 int main(int argc, char** argv) {
+   if (argc < 2) {
+      std::cerr << "Please, specify image path in arguments" << std::endl;
+      return 1;
+   }
+
    examples_gui_t gui(argc, argv, "Texture Example");
 
    frame_ptr_t frame = std::make_shared<frame_t>();
@@ -53,11 +60,14 @@ int main(int argc, char** argv) {
    user_camera = std::make_unique<user_mouse_camera_t>(scene->get_camera());
    scene->get_camera()->look_at(glm::vec3(0, 0, 0));
 
-   image_ptr_t image = std::make_shared<image_t>("img.jpg");
+   image_ptr_t image = std::make_shared<image_t>(argv[1]);
    texture_ptr_t texture = std::make_shared<texture_t>(image);
    
+   float w = 0.5f * (float)image->width() / std::max(image->width(), image->height()),
+         h = 0.5f * (float)image->height() / std::max(image->width(), image->height());
+   
    shader_prog_ptr_t shader_prog = create_shader_prog();
-   scene->add_object(builtin_objects_t::quad({ glm::vec3(-0.5, -0.5, 0), glm::vec3(-0.5, 0.5, 0), glm::vec3(0.5, 0.5, 0), glm::vec3(0.5, -0.5, 0) }, glm::vec3(0, 1, 0), shader_prog, texture));
+   scene->add_object(builtin_objects_t::quad({ glm::vec3(-w, -h, 0), glm::vec3(-w, h, 0), glm::vec3(w, h, 0), glm::vec3(w, -h, 0) }, glm::vec3(0, 1, 0), shader_prog, texture));
 
    gui.start();
 
