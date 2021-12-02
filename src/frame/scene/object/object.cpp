@@ -4,11 +4,11 @@
 
 using namespace LE;
 
-object_t::object_t(buffer_ptr_t const & buffer, shader_prog_ptr_t const & shader_prog) : 
-   buffer_(buffer), shader_prog_(shader_prog), drawing_style_(DS_points)
-{}
-
 object_t::object_t(buffer_ptr_t const & buffer) : object_t(buffer, shader_prog_t::create_default()) {}
+
+object_t::object_t(buffer_ptr_t const& buffer, shader_prog_ptr_t const& shader_prog, texture_ptr_t const& texture) :
+   buffer_(buffer), shader_prog_(shader_prog), texture_(texture), drawing_style_(DS_points)
+{}
 
 GLenum convert_drawing_style(object_t::drawing_style_t drawing_style) {
    switch (drawing_style) {
@@ -27,12 +27,16 @@ void object_t::draw() const {
    buffer_->bind();
    buffer_->enable_vertex_attribs();
    shader_prog_->bind();
+   if (texture_)
+      texture_->bind();
 
    if (set_uniforms_callback_)
       set_uniforms_callback_(shader_prog_);
 
    draw_buffer();
 
+   if (texture_)
+      texture_->unbind();
    shader_prog_->unbind();
    buffer_->disable_vertex_attribs();
    buffer_->unbind();

@@ -14,7 +14,7 @@ namespace LE {
 
    public:
       object_t(buffer_ptr_t const & buffer);
-      object_t(buffer_ptr_t const & buffer, shader_prog_ptr_t const & shader_prog);
+      object_t(buffer_ptr_t const & buffer, shader_prog_ptr_t const& shader_prog = 0, texture_ptr_t const & texture = 0);
 
       void draw() const;
 

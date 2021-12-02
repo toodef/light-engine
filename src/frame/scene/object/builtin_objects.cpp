@@ -4,19 +4,20 @@
 
 using namespace LE;
 
-object_ptr_t builtin_objects_t::point(glm::vec3 const & position, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::point(glm::vec3 const & position, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    buffer_ptr_t buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{position}, color);
-   return shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   return std::make_shared<object_t>(buffer, shader_prog, texture);
 }
 
-object_ptr_t builtin_objects_t::triangle(std::vector<glm::vec3> const & vertices, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::triangle(std::vector<glm::vec3> const & vertices, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
 }
 
-object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, glm::vec3 const & color, unsigned int detalisation, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, glm::vec3 const & color, unsigned int detalisation, shader_prog_ptr_t const & shader_prog,
+   texture_ptr_t const& texture) {
    std::vector<glm::vec3> vertices(12);
    std::vector<unsigned int> index_data;
    std::vector<unsigned int> end_index_data{
@@ -102,24 +103,27 @@ object_ptr_t builtin_objects_t::sphere(glm::vec3 const & center, float radius, g
 
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
    buffer->add_index_buffer(end_index_data);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
 }
 
-object_ptr_t builtin_objects_t::quad(std::vector<glm::vec3> const & vertices, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::quad(std::vector<glm::vec3> const & vertices, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    static const std::vector<unsigned int> indices{
       0 , 1 , 2 ,
       0 , 2 , 3 };
 
-   buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
+   std::vector<glm::vec2> tex_coords = { glm::vec2(1.f, 1.f), glm::vec2(1.f, 0.f), glm::vec2(0.f, 0.f), glm::vec2(0.f, 1.f) };
+
+   buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color, tex_coords);
    buffer->add_index_buffer(indices);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
 }
 
-object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & up, glm::vec3 const & right, glm::vec3 const & forward, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & up, glm::vec3 const & right, glm::vec3 const & forward, glm::vec3 const & color,
+   shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    const std::vector<glm::vec3> vertices = {
       center - up - right - forward,
       center + up - right - forward,
@@ -142,22 +146,22 @@ object_ptr_t builtin_objects_t::box(glm::vec3 const & center, glm::vec3 const & 
 
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
    buffer->add_index_buffer(indices);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
 }
 
-object_ptr_t builtin_objects_t::point_cloud(std::vector<glm::vec3> const & positions, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::point_cloud(std::vector<glm::vec3> const & positions, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    buffer_ptr_t buffer = std::make_shared<buffer_t>(positions, color);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_points);
    return object;
 }
 
-object_ptr_t builtin_objects_t::line(glm::vec3 const & v0, glm::vec3 const & v1, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog) {
+object_ptr_t builtin_objects_t::line(glm::vec3 const & v0, glm::vec3 const & v1, glm::vec3 const & color, shader_prog_ptr_t const & shader_prog, texture_ptr_t const& texture) {
    const std::vector<glm::vec3> vertices = {v0, v1};
    buffer_ptr_t buffer = std::make_shared<buffer_t>(vertices, color);
-   auto object = shader_prog ? std::make_shared<object_t>(buffer, shader_prog) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog, texture);
    object->set_drawing_style(object_t::DS_lines);
    return object;
 }
@@ -204,7 +208,7 @@ object_ptr_t point_cloud_t::compile() {
    else
       buffer = std::make_shared<buffer_t>(pos_, colors_);
 
-   auto object = shader_prog_ ? std::make_shared<object_t>(buffer, shader_prog_) : std::make_shared<object_t>(buffer);
+   auto object = std::make_shared<object_t>(buffer, shader_prog_, nullptr);
    object->set_drawing_style(object_t::DS_points);
    return object;
 }
