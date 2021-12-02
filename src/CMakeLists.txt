@@ -14,6 +14,7 @@ set(SOURCE_FILES
         frame/scene/scene.cpp
         frame/frame.cpp
         utils/user_camera.cpp
+        utils/image.cpp
         light_engine.cpp
 )
 
@@ -27,6 +28,7 @@ set(HEADER_FILES
         ../include/frame/scene/object/shader/shader.hpp
         ../include/frame/scene/object/texture/texture.hpp
         ../include/utils/user_camera.hpp
+        ../include/utils/image.hpp
         ../include/light_engine.hpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})

@@ -14,19 +14,19 @@ public:
 
       glm::vec3 l_offset(-0.5, -0.5, 0);
       std::vector<glm::vec3> vertices = {
-         // E word
+         // E letter
          glm::vec3(0, 0, 0), glm::vec3(1, 0, 0), glm::vec3(1, 0.4, 0), glm::vec3(0.4, 0.4, 0),
          glm::vec3(0.4, 1 - 0.2, 0), glm::vec3(0.7, 1 - 0.2, 0), glm::vec3(0.7, 1 + 0.2, 0), glm::vec3(0.4, 1 + 0.2, 0),
          glm::vec3(0.4, 1.6, 0), glm::vec3(1, 1.6, 0), glm::vec3(1, 2, 0), glm::vec3(0, 2, 0),
 
-         // L word
+         // L letter
          glm::vec3(0, 0, 0) + l_offset, glm::vec3(1, 0, 0) + l_offset, glm::vec3(1, 0.4, 0) + l_offset,
          glm::vec3(0.4, 0.4, 0) + l_offset, glm::vec3(0.4, 2, 0) + l_offset,
          glm::vec3(0, 2, 0) + l_offset
       };
 
       std::vector<unsigned int> indices {
-         // E word
+         // E letter
          0, 1, 3,
          1, 2, 3,
          0, 3, 8,
@@ -35,7 +35,7 @@ public:
          8, 9, 10,
          8, 10, 11,
          0, 8, 11,
-         // L word
+         // L letter
          12 + 0, 12 + 1, 12 + 3,
          12 + 1, 12 + 2, 12 + 3,
          12 + 0, 12 + 3, 12 + 4,
