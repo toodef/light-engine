@@ -11,6 +11,13 @@ set(SOURCE_FILES
         frame/scene/object/shader/uniform_variables.cpp
         frame/scene/object/texture/texture.cpp
         frame/scene/object/builtin_objects.cpp
+        frame/scene/object/builtin_objects/sphere.cpp
+        frame/scene/object/builtin_objects/point.cpp
+        frame/scene/object/builtin_objects/triangle.cpp
+        frame/scene/object/builtin_objects/quad.cpp
+        frame/scene/object/builtin_objects/box.cpp
+        frame/scene/object/builtin_objects/point_cloud.cpp
+        frame/scene/object/builtin_objects/line.cpp
         frame/scene/scene.cpp
         frame/frame.cpp
         utils/user_camera.cpp

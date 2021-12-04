@@ -26,18 +26,23 @@ void object_t::draw() const {
 
    buffer_->bind();
    buffer_->enable_vertex_attribs();
-   shader_prog_->bind();
+
+   if (shader_prog_)
+      shader_prog_->bind();
    if (texture_)
       texture_->bind();
 
-   if (set_uniforms_callback_)
+   if (shader_prog_ && set_uniforms_callback_)
       set_uniforms_callback_(shader_prog_);
 
+   glPointSize(point_size_);
    draw_buffer();
 
    if (texture_)
       texture_->unbind();
-   shader_prog_->unbind();
+   if (shader_prog_)
+      shader_prog_->unbind();
+
    buffer_->disable_vertex_attribs();
    buffer_->unbind();
 }
@@ -49,9 +54,8 @@ void object_t::draw_buffer() const {
       glDrawArrays(convert_drawing_style(drawing_style_), 0, buffer_->vertices_number());
 }
 
-void object_t::set_drawing_style(object_t::drawing_style_t drawing_style) {
-   drawing_style_ = drawing_style;
-}
+void object_t::set_drawing_style(object_t::drawing_style_t drawing_style) {drawing_style_ = drawing_style;}
+void object_t::set_points_size(size_t point_size) { point_size_ = point_size; }
 
 void object_t::set_uniforms_callback(set_uniforms_callback_t const & callback) {
    set_uniforms_callback_ = callback;

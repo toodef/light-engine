@@ -1,9 +1,9 @@
-#include "../../../include/frame/scene/scene.hpp"
+#include <frame/scene/scene.hpp>
 
 using namespace LE;
 
 scene_t::scene_t() : camera_(std::make_shared<camera_t>()) {
-   // TOOD: optimize, recalc mvp for every object
+   // TODO: optimize, recalc mvp for every object
    set_uniform_variables_callback_ = [this](shader_prog_ptr_t const & shader_prog) {
       shader_prog->uniform_variable("mvp")->set(camera_->model_view_projection_matrix());
    };

@@ -19,6 +19,7 @@ namespace LE {
       void draw() const;
 
       void set_drawing_style(drawing_style_t drawing_style);
+      void set_points_size(size_t point_size);
 
       typedef std::function<void(shader_prog_ptr_t const &)> set_uniforms_callback_t;
       void set_uniforms_callback(set_uniforms_callback_t const & callback);
@@ -34,6 +35,8 @@ namespace LE {
       set_uniforms_callback_t set_uniforms_callback_;
 
       drawing_style_t drawing_style_;
+
+      size_t point_size_ = 1;
    };
 
    typedef std::shared_ptr<object_t> object_ptr_t;
