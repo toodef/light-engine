@@ -11,6 +11,7 @@ namespace LE {
    class object_t {
    public:
       enum drawing_style_t { DS_points, DS_triangles, DS_lines };
+      enum polygon_mode_t { PM_point, PM_line, PM_fill};
 
    public:
       object_t(buffer_ptr_t const & buffer);
@@ -19,6 +20,7 @@ namespace LE {
       void draw() const;
 
       void set_drawing_style(drawing_style_t drawing_style);
+      void set_polygon_mode(polygon_mode_t polygon_mode);
       void set_points_size(size_t point_size);
 
       typedef std::function<void(shader_prog_ptr_t const &)> set_uniforms_callback_t;
@@ -34,7 +36,7 @@ namespace LE {
 
       set_uniforms_callback_t set_uniforms_callback_;
 
-      drawing_style_t drawing_style_;
+      GLenum drawing_style_, polygon_mode_;
 
       size_t point_size_ = 1;
    };

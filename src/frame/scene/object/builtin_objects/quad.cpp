@@ -9,18 +9,17 @@ void quad_t::set_texture(texture_ptr_t const& texture) { texture_ = texture; }
 void quad_t::set_color(glm::vec3 const& color) { color_ = color; color_was_set_ = true; }
 
 object_ptr_t quad_t::compile() const {
-   buffer_ptr_t buffer;
-
    static const std::vector<unsigned int> indices {
       0 , 1 , 2 ,
       0 , 2 , 3 };
 
    std::vector<glm::vec2> tex_coords = { glm::vec2(1.f, 1.f), glm::vec2(1.f, 0.f), glm::vec2(0.f, 0.f), glm::vec2(0.f, 1.f) };
 
+   buffer_ptr_t buffer;
    if (color_was_set_)
-      buffer_ptr_t buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2], vertices_[3] }, color_, tex_coords);
+      buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2], vertices_[3] }, color_, tex_coords);
    else
-      buffer_ptr_t buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2], vertices_[3] }, tex_coords);
+      buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2], vertices_[3] }, tex_coords);
 
    buffer->add_index_buffer(indices);
    auto object = std::make_shared<object_t>(buffer, shader_prog_, texture_);

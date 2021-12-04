@@ -3,7 +3,7 @@
 using namespace LE;
 
 box_t::box_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward) :
-   center_(center_), up_(up), right_(right), forward_(forward) {}
+   center_(center), up_(up), right_(right), forward_(forward) {}
 
 void box_t::set_shader_prog(shader_prog_ptr_t const& prog) { shader_prog_ = prog; }
 void box_t::set_texture(texture_ptr_t const& texture) { texture_ = texture; }
