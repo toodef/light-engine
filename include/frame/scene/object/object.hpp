@@ -10,7 +10,7 @@
 namespace LE {
    class object_t {
    public:
-      enum drawing_style_t { DS_points, DS_triangles, DS_lines };
+      enum drawing_style_t { DS_points, DS_line_strip, DS_line_loop, DS_lines, DS_line_strip_adjacency, DS_lines_adjacency, DS_triangle_strip, DS_trianle_fan, DS_triangles, DS_triangle_strip_adjacency, DS_triangles_adjacency, DS_patches };
       enum polygon_mode_t { PM_point, PM_line, PM_fill};
 
    public:
@@ -21,7 +21,8 @@ namespace LE {
 
       void set_drawing_style(drawing_style_t drawing_style);
       void set_polygon_mode(polygon_mode_t polygon_mode);
-      void set_points_size(size_t point_size);
+      void set_points_size(float point_size);
+      void set_lines_width(float lines_width);
 
       typedef std::function<void(shader_prog_ptr_t const &)> set_uniforms_callback_t;
       void set_uniforms_callback(set_uniforms_callback_t const & callback);
@@ -38,7 +39,7 @@ namespace LE {
 
       GLenum drawing_style_, polygon_mode_;
 
-      size_t point_size_ = 1;
+      float point_size_ = 1.f, lines_width_ = 1.f;
    };
 
    typedef std::shared_ptr<object_t> object_ptr_t;

@@ -25,6 +25,7 @@ void object_t::draw() const {
       set_uniforms_callback_(shader_prog_);
 
    glPointSize(point_size_);
+   glLineWidth((GLfloat)lines_width_);
    draw_buffer();
 
    if (texture_)
@@ -45,33 +46,61 @@ void object_t::draw_buffer() const {
 
 void object_t::set_drawing_style(object_t::drawing_style_t drawing_style) {
    switch (drawing_style) {
-   case object_t::DS_points:
+   case DS_points:
       drawing_style_ = GL_POINTS;
       break;
-   case object_t::DS_triangles:
+   case DS_line_strip:
+      drawing_style_ = GL_LINE_STRIP;
+      break;
+   case DS_line_loop:
+      drawing_style_ = GL_LINE_LOOP;
+      break;
+   case DS_lines:
+      drawing_style_ = GL_LINES;
+      break;
+   case DS_line_strip_adjacency:
+      drawing_style_ = GL_LINE_STRIP_ADJACENCY;
+      break;
+   case DS_lines_adjacency:
+      drawing_style_ = GL_LINES_ADJACENCY;
+      break;
+   case DS_triangle_strip:
+      drawing_style_ = GL_TRIANGLE_STRIP;
+      break;
+   case DS_trianle_fan:
+      drawing_style_ = GL_TRIANGLE_FAN;
+      break;
+   case DS_triangles:
       drawing_style_ = GL_TRIANGLES;
       break;
-   case object_t::DS_lines:
-      drawing_style_ = GL_LINES;
+   case DS_triangle_strip_adjacency:
+      drawing_style_ = GL_TRIANGLE_STRIP_ADJACENCY;
+      break;
+   case DS_triangles_adjacency:
+      drawing_style_ = GL_TRIANGLES_ADJACENCY;
+      break;
+   case DS_patches:
+      drawing_style_ = GL_PATCHES;
       break;
    }
 }
 
 void object_t::set_polygon_mode(polygon_mode_t polygon_mode) {
    switch (polygon_mode) {
-   case object_t::PM_point:
+   case PM_point:
       polygon_mode_ = GL_POINT;
       break;
-   case object_t::PM_line:
+   case PM_line:
       polygon_mode_ = GL_LINE;
       break;
-   case object_t::PM_fill:
+   case PM_fill:
       polygon_mode_ = GL_FILL;
       break;
    }
 }
 
-void object_t::set_points_size(size_t point_size) { point_size_ = point_size; }
+void object_t::set_points_size(float point_size) { point_size_ = point_size; }
+void object_t::set_lines_width(float lines_width) { lines_width_ = lines_width; }
 
 void object_t::set_uniforms_callback(set_uniforms_callback_t const & callback) {
    set_uniforms_callback_ = callback;

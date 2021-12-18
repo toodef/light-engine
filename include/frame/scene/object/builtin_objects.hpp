@@ -18,6 +18,7 @@ namespace LE {
       void set_color(glm::vec3 const& color);
 
       void generate_tex_coords();
+      void generate_normales();
 
       object_ptr_t compile() const;
 
@@ -28,7 +29,7 @@ namespace LE {
       float radius_;
       size_t detalisation_;
 
-      bool color_was_set_ = false, generate_tex_coords_ = false;
+      bool color_was_set_ = false, generate_tex_coords_ = false, generate_normales_ = false;
 
       shader_prog_ptr_t shader_prog_ = nullptr;
       texture_ptr_t texture_ = nullptr;
@@ -92,9 +93,29 @@ namespace LE {
       texture_ptr_t texture_ = nullptr;
    };
 
-   class box_t{
+   class box_t {
    public:
       box_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward);
+
+      void set_shader_prog(shader_prog_ptr_t const& prog);
+      void set_texture(texture_ptr_t const& texture);
+      void set_color(glm::vec3 const& color);
+
+      object_ptr_t compile() const;
+
+   private:
+      glm::vec3 center_, up_, forward_, right_;
+      glm::vec3 color_;
+
+      bool color_was_set_ = false;
+
+      shader_prog_ptr_t shader_prog_ = nullptr;
+      texture_ptr_t texture_ = nullptr;
+   };
+
+   class box_wireframe_t {
+   public:
+      box_wireframe_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward);
 
       void set_shader_prog(shader_prog_ptr_t const& prog);
       void set_texture(texture_ptr_t const& texture);

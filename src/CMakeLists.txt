@@ -16,6 +16,7 @@ set(SOURCE_FILES
         frame/scene/object/builtin_objects/triangle.cpp
         frame/scene/object/builtin_objects/quad.cpp
         frame/scene/object/builtin_objects/box.cpp
+        frame/scene/object/builtin_objects/box_wireframe.cpp
         frame/scene/object/builtin_objects/point_cloud.cpp
         frame/scene/object/builtin_objects/line.cpp
         frame/scene/scene.cpp

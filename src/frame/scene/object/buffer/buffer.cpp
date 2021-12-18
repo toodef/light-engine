@@ -62,6 +62,54 @@ buffer_t::buffer_t(std::vector<glm::vec3> const& vertices, glm::vec3 const& colo
    calc_vertex_attribs(VDC_positions | VDC_colors_rgb | VDC_texture_coords);
 }
 
+buffer_t::buffer_t(std::vector<glm::vec3> const& vertices, std::vector<glm::vec3> const& normales, std::vector<glm::vec2> const& tex_coords) {
+   glGenBuffers(1, &id_);
+   glGenVertexArrays(1, &vao_id_);
+
+   struct data_unit {
+      glm::vec3 pos; glm::vec3 normale; glm::vec2 tex;
+   };
+
+   unsigned int count = vertices.size();
+   std::vector<data_unit> data(count);
+   for (unsigned int i = 0; i < vertices.size(); ++i) {
+      data[i].pos = vertices[i];
+      data[i].normale = normales[i];
+      data[i].tex = tex_coords[i];
+   }
+
+   glBindBuffer(GL_ARRAY_BUFFER, id_);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(data_unit) * vertices.size(), &data[0], GL_STATIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   calc_vertex_attribs(VDC_positions | VDC_normals | VDC_texture_coords);
+}
+
+buffer_t::buffer_t(std::vector<glm::vec3> const& vertices, std::vector<glm::vec3> const& normales, glm::vec3 const& color, std::vector<glm::vec2> const& tex_coords) {
+   glGenBuffers(1, &id_);
+   glGenVertexArrays(1, &vao_id_);
+
+   struct data_unit {
+      glm::vec3 pos; glm::vec3 color; glm::vec3 normale; glm::vec2 tex;
+   };
+
+   unsigned int count = vertices.size();
+   std::vector<data_unit> data(count);
+   unsigned int idx = 0;
+   for (unsigned int i = 0; i < vertices.size(); ++i) {
+      data[i].pos = vertices[idx++];
+      data[i].color = color;
+      data[i].normale = normales[idx];
+      data[i].tex = tex_coords[i];
+   }
+
+   glBindBuffer(GL_ARRAY_BUFFER, id_);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(data_unit) * vertices.size(), &data[0], GL_STATIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   calc_vertex_attribs(VDC_positions | VDC_colors_rgb | VDC_normals | VDC_texture_coords);
+}
+
 buffer_t::buffer_t(std::vector<glm::vec3> const & vertices, std::vector<glm::vec3> const & colors) : 
    vertices_number_(vertices.size()), have_idx_buffer_(false), indices_number_(0)
 {

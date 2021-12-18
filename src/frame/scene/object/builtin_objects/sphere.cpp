@@ -12,6 +12,7 @@ void sphere_t::set_texture(texture_ptr_t const & texture) { texture_ = texture; 
 void sphere_t::set_color(glm::vec3 const& color) { color_ = color; color_was_set_ = true; }
 
 void sphere_t::generate_tex_coords() { generate_tex_coords_ = true; }
+void sphere_t::generate_normales() { generate_normales_ = true; }
 
 object_ptr_t sphere_t::compile() const {
    std::vector<glm::vec3> vertices;
@@ -19,26 +20,47 @@ object_ptr_t sphere_t::compile() const {
    generate_vertices_(vertices, indices);
 
    buffer_ptr_t buffer;
-   if (generate_tex_coords_) {
-      std::vector<glm::vec2> tex_coords(vertices.size());
-      for (unsigned int i = 0; i < vertices.size(); ++i) {
-         tex_coords[i] = glm::vec2(atan2f(vertices[i].x, vertices[i].z) / (2 * M_PI) + 0.5f, 0.5f - asinf(vertices[i].y) / M_PI);
-         vertices[i] = vertices[i] * radius_ + center_;
-      }
+   std::vector<glm::vec3> normales;
+   std::vector<glm::vec2> tex_coords;
 
+   if (generate_tex_coords_) {
+      tex_coords.resize(vertices.size());
+      for (unsigned int i = 0; i < vertices.size(); ++i)
+         tex_coords[i] = glm::vec2(atan2f(vertices[i].x, vertices[i].z) / (2 * M_PI) + 0.5f, 0.5f - asinf(vertices[i].y) / M_PI);
+   }
+
+   if (generate_normales_) {
+      normales.resize(vertices.size());
+      for (unsigned int i = 0; i < vertices.size(); ++i)
+         normales[i] = vertices[i];
+   }
+
+   for (unsigned int i = 0; i < vertices.size(); ++i)
+      vertices[i] = vertices[i] * radius_ + center_;
+
+   if (generate_tex_coords_) {
       if (color_was_set_)
-         buffer = std::make_shared<buffer_t>(vertices, color_, tex_coords);
+         if (generate_normales_)
+            buffer = std::make_shared<buffer_t>(vertices, normales, color_, tex_coords);
+         else
+            buffer = std::make_shared<buffer_t>(vertices, color_, tex_coords);
       else
-         buffer = std::make_shared<buffer_t>(vertices, tex_coords);
+         if (generate_normales_)
+            buffer = std::make_shared<buffer_t>(vertices, normales, tex_coords);
+         else
+            buffer = std::make_shared<buffer_t>(vertices, tex_coords);
    }
    else {
-      for (unsigned int i = 0; i < vertices.size(); ++i)
-         vertices[i] = vertices[i] * radius_ + center_;
-
       if (color_was_set_)
-         buffer = std::make_shared<buffer_t>(vertices, color_);
+         if (generate_normales_)
+            buffer = std::make_shared<buffer_t>(vertices, normales, color_);
+         else
+            buffer = std::make_shared<buffer_t>(vertices, color_);
       else
-         buffer = std::make_shared<buffer_t>(vertices);
+         if (generate_normales_)
+            buffer = std::make_shared<buffer_t>(vertices, normales);
+         else
+            buffer = std::make_shared<buffer_t>(vertices);
    }
 
    buffer->add_index_buffer(indices);
