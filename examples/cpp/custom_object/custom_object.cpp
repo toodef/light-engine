@@ -73,7 +73,7 @@ int main( int argc, char ** argv ) {
    examples_gui_t gui(argc, argv, "Custom Object Example");
 
    frame_ptr_t frame = std::make_shared<frame_t>();
-   frame->set_background_color(glm::vec3(1, 1, 1));
+   frame->set_background_color(glm::vec3(0, 0, 0));
    light_engine->add_frame(frame);
 
    scene = std::make_shared<scene_t>();

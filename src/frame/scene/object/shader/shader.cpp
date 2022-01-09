@@ -217,7 +217,57 @@ shader_prog_ptr_t shader_prog_t::create_lightning() {
    return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
 }
 
+shader_prog_ptr_t shader_prog_t::create_billboard() {
+   const std::string vertex_src = "#version 420\n"
+      "layout ( location = 0 )in vec3 pos;\n"
+      "layout ( location = 3 )in vec3 col;\n"
+
+      //"uniform mat4 billboard_matrix;\n"
+      "uniform mat4 model_view;\n"
+      "uniform mat4 project;\n"
+      "uniform mat4 billboard_matrix;\n"
+      "uniform vec3 offset;\n"
+
+      "out vec3 out_col;\n"
+
+      "void main()\n"
+      "{\n"
+      "  out_col = col;\n"
+
+      "  mat4 ModelView = model_view;"
+
+      // Column 0:
+      "  ModelView[0][0] = 1;\n"
+      "  ModelView[0][1] = 0;\n"
+      "  ModelView[0][2] = 0;\n"
+
+      //Column 1:
+      "  ModelView[1][0] = 0;\n"
+      "  ModelView[1][1] = 1;\n"
+      "  ModelView[1][2] = 0;\n"
+
+      // Column 2:
+      "  ModelView[2][0] = 0.f;\n"
+      "  ModelView[2][1] = 0.f;\n"
+      "  ModelView[2][2] = 1.f;\n"
+
+      "  gl_Position = billboard_matrix * vec4(pos, 1.0f);\n"
+      "}",
+      fragment_src = "#version 420\n"
+      "in vec3 out_col;\n"
+      "layout ( location = 0 ) out vec4 color;\n"
+      "void main()\n"
+      "{\n"
+      "   color = vec4(out_col, 1.0f);\n"
+      "}";
+
+   return std::make_shared<shader_prog_t>(std::make_shared<shader_t>(vertex_src, shader_t::ST_vertex),
+      std::make_shared<shader_t>(fragment_src, shader_t::ST_fragment));
+}
+
 shader_prog_t::uniform_variable_ptr_t shader_prog_t::uniform_variable(std::string const & name) {
+   if (uniform_variables_.find(name) == uniform_variables_.end())
+      throw shader_program_exception_t("Shader program doesn't have uniform variable: " + std::string(name));
    return uniform_variables_[name];
 }
 

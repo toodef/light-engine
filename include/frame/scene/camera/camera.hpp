@@ -36,6 +36,7 @@ namespace LE {
       glm::mat4 model_view_matrix();
       glm::mat4 model_view_projection_matrix();
       glm::mat4 normal_matrix();
+      glm::mat4 billboard_matrix(glm::vec3 const& camera_pos);
 
    private:
       void set_orientation(glm::quat const & q);

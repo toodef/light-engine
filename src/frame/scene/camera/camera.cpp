@@ -5,6 +5,8 @@
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <iostream>
+
 #include "../../../../include/frame/scene/camera/camera.hpp"
 
 using namespace LE;
@@ -78,6 +80,31 @@ glm::mat4 camera_t::normal_matrix() {
    if (!normal_mat_is_up_to_date_)
       normal_mat_ = glm::transpose(glm::inverse(model_view_matrix()));
    return normal_mat_;
+}
+
+glm::mat4 camera_t::billboard_matrix(glm::vec3 const & camera_pos) {
+   glm::mat4 model_view = model_view_matrix();
+   //model_view = {
+   //  {1, 0, 0, pos_.x}, // First column
+   //  {0, 1, 0, pos_.y}, // Second column
+   //  {0, 0, 1, pos_.z}, // Third column
+   //  {0, 0, 0, 1}  // Forth column
+   //};
+   //model_view = glm::lookAt(pos_, glm::vec3(0, 0, 1), glm::vec3(0, -1, 0));
+
+   model_view[0][0] = 1.f;
+   model_view[0][1] = 0.f;
+   model_view[0][2] = 0.f;
+   model_view[1][0] = 0.f;
+   model_view[1][1] = 1.f;
+   model_view[1][2] = 0.f;
+
+   //have no idea why
+   //model_view[2][0] = 0.f;
+   //model_view[2][1] = 0.f;
+   //model_view[2][2] = 1.f;
+
+   return projection_matrix() * model_view;
 }
 
 void camera_t::set_orientation(glm::quat const & q)
