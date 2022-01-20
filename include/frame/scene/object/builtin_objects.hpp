@@ -98,38 +98,33 @@ namespace LE {
       box_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward);
 
       void set_shader_prog(shader_prog_ptr_t const& prog);
-      void set_texture(texture_ptr_t const& texture);
       void set_color(glm::vec3 const& color);
 
       object_ptr_t compile() const;
 
-   private:
+   protected:
       glm::vec3 center_, up_, forward_, right_;
       glm::vec3 color_;
 
       bool color_was_set_ = false;
 
       shader_prog_ptr_t shader_prog_ = nullptr;
-      texture_ptr_t texture_ = nullptr;
    };
 
-   class box_wireframe_t {
+   class box_wireframe_t: public box_t {
    public:
       box_wireframe_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward);
+      object_ptr_t compile() const;
+   };
 
-      void set_shader_prog(shader_prog_ptr_t const& prog);
-      void set_texture(texture_ptr_t const& texture);
-      void set_color(glm::vec3 const& color);
+   class box_textured_t: public box_t {
+   public:
+      box_textured_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& right, glm::vec3 const& forward);
 
+      void set_texture(texture_ptr_t const & texture);
       object_ptr_t compile() const;
 
    private:
-      glm::vec3 center_, up_, forward_, right_;
-      glm::vec3 color_;
-
-      bool color_was_set_ = false;
-
-      shader_prog_ptr_t shader_prog_ = nullptr;
       texture_ptr_t texture_ = nullptr;
    };
 
@@ -168,6 +163,20 @@ namespace LE {
       std::vector<glm::vec3> vertices_, colors_, normales_;
       shader_prog_ptr_t shader_prog_ = nullptr;
       texture_ptr_t texture_ = nullptr;
+   };
+
+   class model_t {
+   public:
+      model_t(std::string const& path);
+
+      std::vector<object_ptr_t> compile();
+
+      glm::vec3 bbox_min_pt() const;
+      glm::vec3 bbox_max_pt() const;
+
+   private:
+      std::string path_;
+      glm::vec3 bbox_min_pt_, bbox_max_pt_;
    };
 
    class builtin_objects_t {

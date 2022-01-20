@@ -15,7 +15,8 @@ object_ptr_t triangle_t::compile() const {
       buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2] }, color_);
    else
       buffer = std::make_shared<buffer_t>(std::vector<glm::vec3>{ vertices_[0], vertices_[1], vertices_[2] });
-   auto object = std::make_shared<object_t>(buffer, shader_prog_, texture_);
+   auto object = std::make_shared<object_t>(buffer, shader_prog_, std::vector<texture_ptr_t>{ texture_ });
    object->set_drawing_style(object_t::DS_triangles);
+   object->enable_face_culling(false, false);
    return object;
 }

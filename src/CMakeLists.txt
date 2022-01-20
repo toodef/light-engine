@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(light-engine)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES
         frame/scene/camera/camera.cpp
@@ -17,8 +17,10 @@ set(SOURCE_FILES
         frame/scene/object/builtin_objects/quad.cpp
         frame/scene/object/builtin_objects/box.cpp
         frame/scene/object/builtin_objects/box_wireframe.cpp
+        frame/scene/object/builtin_objects/box_textured.cpp
         frame/scene/object/builtin_objects/point_cloud.cpp
         frame/scene/object/builtin_objects/line.cpp
+        frame/scene/object/builtin_objects/model.cpp
         frame/scene/scene.cpp
         frame/frame.cpp
         utils/user_camera.cpp

@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 
-#include "../../../../../include/frame/scene/object/texture/texture.hpp"
+#include <frame/scene/object/texture/texture.hpp>
 
 using namespace LE;
 
@@ -9,25 +9,19 @@ texture_t::texture_t(image_ptr_t const & image, GLenum texture_type): texture_ty
    glGenTextures(1, &id_);
    bind();
 
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-   glTexImage2D(texture_type, 0, GL_RGB, image->width(), image->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, image->data().get());
+   GLenum format = GL_RGB;
+   if (image->channels_num() == 1)
+      format = GL_R;
+   else if (image->channels_num() == 4)
+      format = GL_RGBA;
    
-   if (image->channels_num() == 1) {
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
-   }
-
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+   glTexImage2D(texture_type, 0, format, image->width(), image->height(), 0, format, GL_UNSIGNED_BYTE, image->data().get());
+   
    //glGenerateMipmap(GL_TEXTURE_2D);
    unbind();
 }

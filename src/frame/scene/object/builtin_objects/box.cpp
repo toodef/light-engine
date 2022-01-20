@@ -6,7 +6,6 @@ box_t::box_t(glm::vec3 const& center, glm::vec3 const& up, glm::vec3 const& righ
    center_(center), up_(up), right_(right), forward_(forward) {}
 
 void box_t::set_shader_prog(shader_prog_ptr_t const& prog) { shader_prog_ = prog; }
-void box_t::set_texture(texture_ptr_t const& texture) { texture_ = texture; }
 void box_t::set_color(glm::vec3 const& color) { color_ = color; color_was_set_ = true; }
 
 object_ptr_t box_t::compile() const {
@@ -23,8 +22,8 @@ object_ptr_t box_t::compile() const {
 
    static const std::vector<unsigned int> indices{
       0, 1, 2, 0, 2, 3,
-      0, 1, 5, 0, 5, 4,
-      4, 5, 6, 4, 6, 7,
+      0, 5, 1, 0, 4, 5,
+      4, 6, 5, 4, 7, 6,
       3, 2, 6, 3, 6, 7,
       1, 5, 6, 1, 6, 2,
       4, 0, 3, 4, 3, 7
@@ -37,7 +36,7 @@ object_ptr_t box_t::compile() const {
       buffer = std::make_shared<buffer_t>(vertices);
 
    buffer->add_index_buffer(indices);
-   auto object = std::make_shared<object_t>(buffer, shader_prog_, texture_);
+   auto object = std::make_shared<object_t>(buffer, shader_prog_);
    object->set_drawing_style(object_t::DS_triangles);
    return object;
 }

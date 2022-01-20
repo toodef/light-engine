@@ -46,7 +46,9 @@ namespace LE {
       static shader_prog_ptr_t create_default();
       static shader_prog_ptr_t create_texture(bool draw_uv_coords = false);
       static shader_prog_ptr_t create_lightning();
+      static shader_prog_ptr_t create_lighted_and_textured(bool alpha_blending = false);
       static shader_prog_ptr_t create_billboard();
+      static shader_prog_ptr_t create_skybox(bool draw_uv_coords = false);
 
       class uniform_variable_t;
       typedef std::shared_ptr<uniform_variable_t> uniform_variable_ptr_t;

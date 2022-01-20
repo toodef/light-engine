@@ -1,25 +1,40 @@
 #include <GL/glew.h>
+#include <filesystem>
+#include <map>
 
-#include "../../../../include/frame/scene/object/object.hpp"
+#include <frame/scene/object/object.hpp>
 
 using namespace LE;
 
 object_t::object_t(buffer_ptr_t const & buffer) : object_t(buffer, shader_prog_t::create_default()) {}
 
-object_t::object_t(buffer_ptr_t const& buffer, shader_prog_ptr_t const& shader_prog, texture_ptr_t const& texture) :
-   buffer_(buffer), shader_prog_(shader_prog), texture_(texture), drawing_style_(GL_POINTS), polygon_mode_(GL_FILL)
+object_t::object_t(buffer_ptr_t const& buffer, shader_prog_ptr_t const& shader_prog, std::vector<texture_ptr_t> const& textures) :
+   buffer_(buffer), shader_prog_(shader_prog), textures_(textures), drawing_style_(GL_POINTS), polygon_mode_(GL_FILL)
 {}
 
 void object_t::draw() const {
    glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
+
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_BLEND);
+
+   if (cull_faces_) {
+      glEnable(GL_CULL_FACE);
+      glCullFace(cull_faces_mode_);
+   }
 
    buffer_->bind();
    buffer_->enable_vertex_attribs();
 
    if (shader_prog_)
       shader_prog_->bind();
-   if (texture_)
-      texture_->bind();
+   size_t texture_id = 0;
+   for (texture_ptr_t const& texture : textures_)
+      if (texture) {
+         glActiveTexture(GL_TEXTURE0 + texture_id);
+         texture->bind();
+         texture_id++;
+      }
 
    if (shader_prog_ && set_uniforms_callback_)
       set_uniforms_callback_(shader_prog_);
@@ -28,13 +43,17 @@ void object_t::draw() const {
    glLineWidth((GLfloat)lines_width_);
    draw_buffer();
 
-   if (texture_)
-      texture_->unbind();
+   for (texture_ptr_t const& texture : textures_)
+      if (texture)
+         texture->unbind();
    if (shader_prog_)
       shader_prog_->unbind();
 
    buffer_->disable_vertex_attribs();
    buffer_->unbind();
+
+   if (cull_faces_)
+      glDisable(GL_CULL_FACE);
 }
 
 void object_t::draw_buffer() const {
@@ -101,6 +120,18 @@ void object_t::set_polygon_mode(polygon_mode_t polygon_mode) {
 
 void object_t::set_points_size(float point_size) { point_size_ = point_size; }
 void object_t::set_lines_width(float lines_width) { lines_width_ = lines_width; }
+
+void object_t::enable_face_culling(bool cull_front, bool cull_back) {
+   cull_faces_ = true;
+   if (cull_front && cull_back)
+      cull_faces_mode_ = GL_FRONT_AND_BACK;
+   else if (cull_back)
+      cull_faces_mode_ = GL_BACK;
+   else if (cull_front)
+      cull_faces_mode_ = GL_FRONT;
+   else
+      cull_faces_ = false;
+}
 
 void object_t::set_uniforms_callback(set_uniforms_callback_t const & callback) {
    set_uniforms_callback_ = callback;

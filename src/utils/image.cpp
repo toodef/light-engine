@@ -1,4 +1,5 @@
 #include <memory>
+
 #include <utils/image.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -34,6 +35,18 @@ image_ptr_t image_t::generate_chess(size_t x_cells_num, size_t y_cells_num) {
       for (int i = 0; i < y_cells_num; i++)
          for (int j = 0; j < x_cells_num; j++)
             data.get()[3 * (i * x_cells_num + j) + c] = 255 * ((i + j + 1) % 2);
+
+   return std::make_shared<image_t>(data, x_cells_num, y_cells_num, 3);
+}
+
+image_ptr_t image_t::generate_chess(size_t x_cells_num, size_t y_cells_num, glm::uvec3 const & color1, glm::uvec3 const& color2) {
+   std::shared_ptr<unsigned char> data;
+   data.reset(new unsigned char[x_cells_num * y_cells_num * 3]);
+
+   for (int c = 0; c < 3; c++)
+      for (int i = 0; i < y_cells_num; i++)
+         for (int j = 0; j < x_cells_num; j++)
+            data.get()[3 * (i * x_cells_num + j) + c] = ((i + j + 1) % 2 > 0) ? color1[c] : color2[c];
 
    return std::make_shared<image_t>(data, x_cells_num, y_cells_num, 3);
 }

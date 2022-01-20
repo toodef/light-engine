@@ -17,7 +17,8 @@ object_ptr_t line_t::compile() const {
    else
       buffer = std::make_shared<buffer_t>(vertices);
 
-   auto object = std::make_shared<object_t>(buffer, shader_prog_, texture_);
+   auto object = std::make_shared<object_t>(buffer, shader_prog_, std::vector<texture_ptr_t>{ texture_ });
    object->set_drawing_style(object_t::DS_lines);
+   object->enable_face_culling(false, false);
    return object;
 }

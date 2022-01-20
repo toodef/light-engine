@@ -49,6 +49,11 @@ unsigned int camera_t::width() const { return width_; }
 void camera_t::height(unsigned int height) { height_ = height; projection_matrix_is_up_to_date_ = false; mvp_mat_is_up_to_date_ = false; }
 void camera_t::width(unsigned int width) { width_ = width; projection_matrix_is_up_to_date_ = false; mvp_mat_is_up_to_date_ = false; }
 
+float camera_t::z_far() const { return z_far_; }
+void camera_t::z_far(float z_far) { z_far_ = z_far; }
+float camera_t::z_near() const { return z_near_; }
+void camera_t::z_near(float z_near) { z_near_ = z_near; }
+
 glm::mat4 camera_t::projection_matrix() {
    if (!projection_matrix_is_up_to_date_) {
       prj_mat_ = glm::perspective(view_angle_, (float)width_ / height_, z_near_, z_far_);

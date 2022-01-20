@@ -39,7 +39,8 @@ object_ptr_t point_cloud_t::compile() const {
    else
       buffer = std::make_shared<buffer_t>(vertices_, colors_);
 
-   auto object = std::make_shared<object_t>(buffer, shader_prog_, nullptr);
+   auto object = std::make_shared<object_t>(buffer, shader_prog_);
    object->set_drawing_style(object_t::DS_points);
+   object->enable_face_culling(false, false);
    return object;
 }

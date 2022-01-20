@@ -1,5 +1,6 @@
 #include <memory>
 #include <string>
+#include <glm/glm.hpp>
 
 
 namespace LE {
@@ -19,6 +20,7 @@ namespace LE {
       size_t channels_num() const;
 
       static image_ptr_t generate_chess(size_t x_cells_num, size_t y_cells_num);
+      static image_ptr_t generate_chess(size_t x_cells_num, size_t y_cells_num, glm::uvec3 const& color1, glm::uvec3 const& color2);
 
    private:
       std::shared_ptr<unsigned char> data_ = nullptr;

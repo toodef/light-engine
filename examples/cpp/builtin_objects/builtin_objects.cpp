@@ -75,14 +75,15 @@ void generate_spheres(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
 }
 
 void generate_quads(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
-   shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
+   const shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
 
-   float half_z = ((min_pt + max_pt) / 2.f).z;
+   const float half_z = ((min_pt + max_pt) / 2.f).z;
+   const glm::vec3 offset = (max_pt - min_pt) / 6.f;
    std::array<glm::vec3, 4> quad_vertices{
-      glm::vec3(min_pt.x, min_pt.y, half_z),
-      glm::vec3(min_pt.x, max_pt.y, half_z),
-      glm::vec3(max_pt.x, max_pt.y, half_z),
-      glm::vec3(max_pt.x, min_pt.y, half_z)
+      glm::vec3(min_pt.x + offset.x, min_pt.y + offset.y, half_z),
+      glm::vec3(min_pt.x + offset.x, max_pt.y - offset.y, half_z),
+      glm::vec3(max_pt.x - offset.x, max_pt.y - offset.y, half_z),
+      glm::vec3(max_pt.x - offset.x, min_pt.y + offset.y, half_z)
    };
    
    quad_t quad(quad_vertices);
@@ -95,8 +96,7 @@ void generate_quads(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
 void generate_box(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
    shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
 
-   //box_t box((min_pt + max_pt) / 2.f, glm::vec3(0, 0.5, 0), glm::vec3(0.5, 0, 0), glm::vec3(0, 0, 0.5));
-   box_t box(glm::vec3(0, 0, 0), glm::vec3(0, 0.5, 0), glm::vec3(0.5, 0, 0), glm::vec3(0, 0, 0.5));
+   box_t box((min_pt + max_pt) / 2.f, glm::vec3(0, 0.5, 0), glm::vec3(0.5, 0, 0), glm::vec3(0, 0, 0.5));
    box.set_shader_prog(shader_prog);
    box.set_color(glm::vec3(1, 1, 0));
    object_ptr_t object = box.compile();
@@ -126,23 +126,20 @@ void generate_point_cloud(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
 
    point_cloud_t point_cloud = point_cloud_t(points);
    point_cloud.set_shader_prog(shader_prog);
-   point_cloud.set_color(glm::vec3(0.5, 1, 0.5));
+   point_cloud.set_color(glm::vec3(1, 0.3, 0.7));
    object_ptr_t object = point_cloud.compile();
-   object->set_points_size(2);
+   object->set_points_size(3);
    scene->add_object(object);
 }
 
 void generate_billboard(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
    const float half_z = ((min_pt + max_pt) / 2.f).z;
+   const glm::vec3 offset = (max_pt - min_pt) / 6.f;
    std::array<glm::vec3, 4> quad_vertices{
-      glm::vec3(min_pt.x, min_pt.y, half_z),
-      glm::vec3(min_pt.x, max_pt.y, half_z),
-      glm::vec3(max_pt.x, max_pt.y, half_z),
-      glm::vec3(max_pt.x, min_pt.y, half_z)
-      //glm::vec3(min_pt.x, min_pt.y, 0),
-      //glm::vec3(min_pt.x, max_pt.y, 0),
-      //glm::vec3(max_pt.x, max_pt.y, 0),
-      //glm::vec3(max_pt.x, min_pt.y, 0)
+      glm::vec3(min_pt.x + offset.x, min_pt.y + offset.y, half_z),
+      glm::vec3(min_pt.x + offset.x, max_pt.y - offset.y, half_z),
+      glm::vec3(max_pt.x - offset.x, max_pt.y - offset.y, half_z),
+      glm::vec3(max_pt.x - offset.x, min_pt.y + offset.y, half_z)
    };
 
    quad_t quad(quad_vertices);
@@ -150,12 +147,23 @@ void generate_billboard(glm::vec3 const& min_pt, glm::vec3 const& max_pt) {
    quad.set_color(glm::vec3(1, 0, 0));
    object_ptr_t object = quad.compile();
    object->set_uniforms_callback([](shader_prog_ptr_t const& shader_prog) {
-      shader_prog->uniform_variable("billboard_matrix")->set(camera->billboard_matrix(camera->pos()));
-      //shader_prog->uniform_variable("model_view")->set(camera->model_view_matrix());
-      //shader_prog->uniform_variable("project")->set(camera->projection_matrix());
-      //shader_prog->uniform_variable("offset")->set(glm::vec3(0, 0, 13.33333) - camera->pos());
+         shader_prog->uniform_variable("billboard_matrix")->set(camera->billboard_matrix(camera->pos()));
       }
    );
+   scene->add_object(object);
+}
+
+void generate_skybox() {
+   box_textured_t box(glm::vec3(0, 0, 0), glm::vec3(0, 250, 0), glm::vec3(250, 0, 0), glm::vec3(0, 0, 250));
+   box.set_shader_prog(shader_prog_t::create_skybox());
+   box.set_texture(std::make_shared<texture_t>(image_t::generate_chess(128, 128, glm::uvec3(20, 40, 31), glm::uvec3(80, 46, 71))));
+   object_ptr_t object = box.compile();
+   object->set_uniforms_callback([](shader_prog_ptr_t const& shader_prog) {
+         shader_prog->uniform_variable("mvp")->set(camera->model_view_projection_matrix());
+         shader_prog->uniform_variable("camera_pos")->set(camera->pos());
+      }
+   );
+   object->enable_face_culling(false, false);
    scene->add_object(object);
 }
 
@@ -185,17 +193,17 @@ int main( int argc, char ** argv ) {
    scene = std::make_shared<scene_t>();
    frame->add_scene(scene);
    camera = scene->get_camera();
+   camera->z_far(500);
    user_camera = std::make_unique<user_wasd_camera_t>(camera);
    user_camera->set_camera_wheel_sensetivity(2);
    user_camera->set_camera_keyboard_sensetivity(0.01f);
-   //scene->get_camera()->pos(glm::vec3(5, 4, -5));
-   //scene->get_camera()->look_at(glm::vec3(5, 0, 0));
 
    const glm::vec3 cells_num = glm::vec3(3, 1, 3);
    const glm::vec3 min_pt = glm::vec3(-5.f, -10.f / 3, 5.f), max_pt = glm::vec3(5.f, 0.f, 15.f);
    const glm::vec3 cell_size = (max_pt - min_pt) / cells_num;
 
    draw_mesh(min_pt, max_pt, cells_num);
+   generate_skybox();
 
    unsigned int cur_cell_x = 0, cur_cell_z = 0;
    generate_points(min_pt + glm::vec3(cur_cell_x, 0, cur_cell_z) * cell_size, min_pt + glm::vec3(cur_cell_x + 1, 1, cur_cell_z + 1) * cell_size);
