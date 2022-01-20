@@ -6,43 +6,6 @@
 
 using namespace LE;
 
-static shader_prog_ptr_t create_shader_prog() {
-   const std::string v_shader_src = "#version 420\n"
-      "layout ( location = 0 ) in vec3 pos;\n"
-      "layout ( location = 3 ) in vec3 col;\n"
-      "layout ( location = 6 ) in vec2 tex;\n"
-      
-      "out vec3 out_color;\n"
-      "out vec2 out_tex_coord;\n"
-
-      "uniform mat4 mvp;\n"
-
-      "void main()\n"
-      "{\n"
-      "   gl_Position = mvp * vec4(pos, 1.0f);\n"
-      "   out_color = vec3(tex[0], tex[1], 1.0f);"
-      "   out_tex_coord = tex;\n"
-      "}";
-
-   const std::string f_shader_src = "#version 420\n"
-      "in vec3 out_color;\n"
-      "in vec2 out_tex_coord;\n"
-
-      "out vec4 color;\n"
-
-      "uniform sampler2D image;\n"
-
-      "void main()\n"
-      "{\n"
-      "   color =  texture(image, out_tex_coord);\n"
-      "}";
-
-   shader_ptr_t vertex_shader = std::make_shared<shader_t>(v_shader_src, shader_t::ST_vertex),
-      fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
-   return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
-}
-
-
 int main(int argc, char** argv) {
    if (argc < 2) {
       std::cerr << "Please, specify image path in arguments" << std::endl;
@@ -63,11 +26,12 @@ int main(int argc, char** argv) {
    image_ptr_t image = std::make_shared<image_t>(argv[1]);
    texture_ptr_t texture = std::make_shared<texture_t>(image);
    
-   float w = 0.5f * (float)image->width() / std::max(image->width(), image->height()),
-         h = 0.5f * (float)image->height() / std::max(image->width(), image->height());
-   
-   shader_prog_ptr_t shader_prog = create_shader_prog();
-   scene->add_object(builtin_objects_t::quad({ glm::vec3(-w, -h, 0), glm::vec3(-w, h, 0), glm::vec3(w, h, 0), glm::vec3(w, -h, 0) }, glm::vec3(0, 1, 0), shader_prog, texture));
+   shader_prog_ptr_t shader_prog = shader_prog_t::create_texture();
+   sphere_t sphere(glm::vec3(0, 0, 0), 0.5f, 5);
+   sphere.set_shader_prog(shader_prog);
+   sphere.set_texture(texture);
+   sphere.generate_tex_coords();
+   scene->add_object(sphere.compile());
 
    gui.start();
 

@@ -32,10 +32,16 @@ namespace LE {
       void height(unsigned int height);
       void width(unsigned int width);
 
+      float z_far() const;
+      void z_far(float z_far);
+      float z_near() const;
+      void z_near(float z_near);
+
       glm::mat4 projection_matrix();
       glm::mat4 model_view_matrix();
       glm::mat4 model_view_projection_matrix();
       glm::mat4 normal_matrix();
+      glm::mat4 billboard_matrix(glm::vec3 const& camera_pos);
 
    private:
       void set_orientation(glm::quat const & q);

@@ -16,8 +16,14 @@ int main( int argc, char ** argv ) {
    scene->get_camera()->look_at(glm::vec3(0, 0, 0));
 
    shader_prog_ptr_t shader_prog = shader_prog_t::create_default();
-   for (size_t i = 0; i < 1000; ++i)
-      scene->add_object(builtin_objects_t::point(glm::vec3((float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5), glm::vec3(0, 1, 0), shader_prog));
+   for (size_t i = 0; i < 1000; ++i) {
+      point_t point(glm::vec3((float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5, (float)rand() / RAND_MAX - 0.5));
+      point.set_shader_prog(shader_prog);
+      point.set_color(glm::vec3(0, 0, 1));
+      object_ptr_t object = point.compile();
+      object->set_points_size(3);
+      scene->add_object(object);
+   }
 
    gui.start();
 

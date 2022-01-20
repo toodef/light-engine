@@ -116,7 +116,246 @@ shader_prog_ptr_t shader_prog_t::create_default() {
                                           std::make_shared<shader_t>(fragment_src, shader_t::ST_fragment));
 }
 
+shader_prog_ptr_t shader_prog_t::create_texture(bool draw_uv_coords) {
+   const std::string v_shader_src = "#version 420\n"
+      "layout ( location = 0 ) in vec3 pos;\n"
+      "layout ( location = 3 ) in vec2 tex;\n"
+
+      "out vec3 out_color;\n"
+      "out vec2 out_tex_coord;\n"
+
+      "uniform mat4 mvp;\n"
+
+      "void main()\n"
+      "{\n"
+      "   gl_Position = mvp * vec4(pos, 1.0f);\n"
+      "   out_color = vec3(tex[0], tex[1], 1.0f);"
+      "   out_tex_coord = tex;\n"
+      "}";
+
+   std::string f_shader_src = "#version 420\n"
+      "in vec3 out_color;\n"
+      "in vec2 out_tex_coord;\n"
+
+      "out vec4 color;\n"
+
+      "uniform sampler2D image;\n"
+
+      "void main()\n"
+      "{\n";
+      if (draw_uv_coords)
+         f_shader_src = f_shader_src + std::string("   color = vec4(out_tex_coord, 1.f, 1.f);\n}");
+      else
+         f_shader_src = f_shader_src + std::string("   color = texture(image, out_tex_coord);\n}");
+
+   shader_ptr_t vertex_shader = std::make_shared<shader_t>(v_shader_src, shader_t::ST_vertex),
+      fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
+   return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
+}
+
+shader_prog_ptr_t shader_prog_t::create_lightning() {
+   const std::string v_shader_src = "#version 420\n"
+      "layout ( location = 0 )in vec3 pos;\n"
+      "layout ( location = 3 )in vec3 col;\n"
+      "layout ( location = 6 )in vec3 normal;\n"
+
+      "out vec3 vert_pos;\n"
+      "out vec3 vert_col;\n"
+      "out vec3 vert_normal;\n"
+      "out vec3 light_pos;\n"
+
+      "uniform mat4 mvp;\n"
+      "uniform mat4 normal_matrix;\n"
+      "uniform mat4 model_view;\n"
+      "uniform vec3 light_position;\n"
+
+      "void main()\n"
+      "{\n"
+      "   vert_col = col;\n"
+      "   vert_pos = vec3(model_view * vec4(pos, 1));\n"
+      "   vert_normal = mat3(normal_matrix) * normal;\n"
+      "   light_pos = vec3(model_view * vec4(light_position, 1));\n"
+      "   gl_Position = mvp * vec4(pos, 1.0f);\n"
+      "}";
+
+   const std::string f_shader_src = "#version 420\n"
+      "in vec3 vert_pos;\n"
+      "in vec3 vert_col;\n"
+      "in vec3 vert_normal;\n"
+      "in vec3 light_pos;\n"
+
+      "layout ( location = 0 ) out vec4 frag_color;\n"
+
+      "uniform vec3 light_color;\n"
+      "uniform float ambient_strength;\n"
+      "uniform float diffuse_strength;\n"
+      "uniform float specular_strength;\n"
+
+      "void main()\n"
+      "{\n"
+      // ambient
+      "   vec3 ambient = ambient_strength * light_color;\n"
+
+      // diffuse
+      "   vec3 norm = normalize(vert_normal);\n"
+      "   vec3 lightDir = normalize(light_pos - vert_pos);\n"
+      "   float diff = max(dot(norm, lightDir), 0.0);\n"
+      "   vec3 diffuse = diffuse_strength * diff * light_color;\n"
+
+      // specular
+      "   vec3 viewDir = normalize(-vert_pos);\n"
+      "   vec3 reflectDir = reflect(-lightDir, norm);\n"
+      "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
+      "   vec3 specular = specular_strength * spec * light_color;\n"
+
+      "   vec3 result = (ambient + diffuse + specular) * vert_col; \n"
+      "   frag_color = vec4(result, 1.0); \n"
+      "}";
+
+   shader_ptr_t vertex_shader = std::make_shared<shader_t>(v_shader_src, shader_t::ST_vertex),
+      fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
+   return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
+}
+
+shader_prog_ptr_t shader_prog_t::create_lighted_and_textured(bool alpha_blending) {
+   const std::string v_shader_src = "#version 420\n"
+      "layout ( location = 0 ) in vec3 pos;\n"
+      "layout ( location = 3 ) in vec3 normal;\n"
+      "layout ( location = 6 ) in vec2 tex;\n"
+
+      "out vec3 vert_pos;\n"
+      "out vec2 out_tex_coord;\n"
+      "out vec3 vert_normal;\n"
+      "out vec3 light_pos;\n"
+
+      "uniform mat4 mvp;\n"
+      "uniform mat4 normal_matrix;\n"
+      "uniform mat4 model_view;\n"
+      "uniform vec3 light_position;\n"
+
+      "void main()\n"
+      "{\n"
+      "   vert_pos = vec3(model_view * vec4(pos, 1));\n"
+      "   out_tex_coord = tex;\n"
+      "   vert_normal = mat3(normal_matrix) * normal;\n"
+      "   light_pos = vec3(model_view * vec4(light_position, 1));\n"
+      "   gl_Position = mvp * vec4(pos, 1.0f);\n"
+      "}";
+
+   std::string f_shader_src = "#version 420\n"
+      "in vec3 vert_pos;\n"
+      "in vec2 out_tex_coord;\n"
+      "in vec3 vert_normal;\n"
+      "in vec3 light_pos;\n"
+
+      "layout ( location = 0 ) out vec4 frag_color;\n"
+
+      "uniform vec3 light_color;\n"
+      "uniform float ambient_strength;\n"
+      "uniform float diffuse_strength;\n"
+      "uniform float specular_strength;\n"
+      "layout (binding=0) uniform sampler2D image;\n";
+
+   if (alpha_blending)
+      f_shader_src += "layout (binding=1) uniform sampler2D alpha_map;\n";
+
+   f_shader_src += "void main()\n"
+      "{\n"
+      // ambient
+      "   vec3 ambient = ambient_strength * light_color;\n"
+
+      // diffuse
+      "   vec3 norm = normalize(vert_normal);\n"
+      "   vec3 lightDir = normalize(light_pos - vert_pos);\n"
+      "   float diff = max(dot(norm, lightDir), 0.0);\n"
+      "   vec3 diffuse = diffuse_strength * diff * light_color;\n"
+
+      // specular
+      "   vec3 viewDir = normalize(-vert_pos);\n"
+      "   vec3 reflectDir = reflect(-lightDir, norm);\n"
+      "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
+      "   vec3 specular = specular_strength * spec * light_color;\n"
+
+      "   vec4 vert_col = texture(image, out_tex_coord);\n"
+      "   vec4 result = vec4((ambient + diffuse + specular) * vert_col.rgb, vert_col.a);\n";
+
+   if (alpha_blending)
+      f_shader_src += "   frag_color = result * texture(alpha_map, out_tex_coord);\n}";
+   else
+      f_shader_src += "   frag_color = result;\n}";
+
+   shader_ptr_t vertex_shader = std::make_shared<shader_t>(v_shader_src, shader_t::ST_vertex),
+      fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
+   return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
+}
+
+shader_prog_ptr_t shader_prog_t::create_billboard() {
+   const std::string vertex_src = "#version 420\n"
+      "layout ( location = 0 )in vec3 pos;\n"
+      "layout ( location = 3 )in vec3 col;\n"
+
+      "uniform mat4 billboard_matrix;\n"
+
+      "out vec3 out_col;\n"
+
+      "void main()\n"
+      "{\n"
+      "  out_col = col;\n"
+      "  gl_Position = billboard_matrix * vec4(pos, 1.0f);\n"
+      "}",
+
+      fragment_src = "#version 420\n"
+      "in vec3 out_col;\n"
+      "layout ( location = 0 ) out vec4 color;\n"
+      "void main()\n"
+      "{\n"
+      "   color = vec4(out_col, 1.0f);\n"
+      "}";
+
+   return std::make_shared<shader_prog_t>(std::make_shared<shader_t>(vertex_src, shader_t::ST_vertex),
+      std::make_shared<shader_t>(fragment_src, shader_t::ST_fragment));
+}
+
+shader_prog_ptr_t shader_prog_t::create_skybox(bool draw_uv_coords) {
+   const std::string vertex_src = "#version 420\n"
+      "layout ( location = 0 ) in vec3 pos;\n"
+      "layout ( location = 3 ) in vec2 tex;\n"
+
+      "out vec3 out_color;\n"
+      "out vec2 out_tex_coord;\n"
+
+      "uniform mat4 mvp;\n"
+      "uniform vec3 camera_pos;\n"
+
+      "void main()\n"
+      "{\n"
+      "   gl_Position = mvp * vec4(pos + camera_pos, 1.0f);\n"
+      "   out_color = vec3(tex[0], tex[1], 1.0f);"
+      "   out_tex_coord = tex;\n"
+      "}";
+
+   std::string fragment_src = "#version 420\n"
+      "in vec3 out_color;\n"
+      "in vec2 out_tex_coord;\n"
+
+      "out vec4 color;\n"
+
+      "uniform sampler2D image;\n"
+
+      "void main()\n"
+      "{\n";
+   if (draw_uv_coords)
+      fragment_src = fragment_src + std::string("   color = vec4(out_tex_coord, 1.f, 1.f);\n}");
+   else
+      fragment_src = fragment_src + std::string("   color = texture(image, out_tex_coord);\n}");
+
+   return std::make_shared<shader_prog_t>(std::make_shared<shader_t>(vertex_src, shader_t::ST_vertex),
+                                          std::make_shared<shader_t>(fragment_src, shader_t::ST_fragment));
+}
+
 shader_prog_t::uniform_variable_ptr_t shader_prog_t::uniform_variable(std::string const & name) {
+   if (uniform_variables_.find(name) == uniform_variables_.end())
+      throw shader_program_exception_t("Shader program doesn't have uniform variable: " + std::string(name));
    return uniform_variables_[name];
 }
 

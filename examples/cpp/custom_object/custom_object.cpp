@@ -5,7 +5,7 @@ using namespace LE;
 
 class le_logo_t : public object_t {
 public:
-   le_logo_t(camera_ptr_t const & camera) : object_t(create_buffer(), create_shader_prog()), camera_(camera) {
+   le_logo_t(camera_ptr_t const & camera) : object_t(create_buffer(), shader_prog_t::create_lightning()), camera_(camera) {
       set_drawing_style(object_t::DS_triangles);
    }
 
@@ -67,78 +67,13 @@ private:
 
 private:
    camera_ptr_t camera_;
-
-private:
-   static shader_prog_ptr_t create_shader_prog() {
-      const std::string v_shader_src = "#version 420\n"
-         "layout ( location = 0 )in vec3 pos;\n"
-         "layout ( location = 3 )in vec3 col;\n"
-         "layout ( location = 6 )in vec3 normal;\n"
-
-         "out vec3 vert_pos;\n"
-         "out vec3 vert_col;\n"
-         "out vec3 vert_normal;\n"
-         "out vec3 light_pos;\n"
-
-         "uniform mat4 mvp;\n"
-         "uniform mat4 normal_matrix;\n"
-         "uniform mat4 model_view;\n"
-         "uniform vec3 light_position;\n"
-
-         "void main()\n"
-         "{\n"
-         "   vert_col = col;\n"
-         "   vert_pos = vec3(model_view * vec4(pos, 1));\n"
-         "   vert_normal = mat3(normal_matrix) * normal;\n"
-         "   light_pos = vec3(model_view * vec4(light_position, 1));\n"
-         "   gl_Position = mvp * vec4(pos, 1.0f);\n"
-         "}";
-
-      const std::string f_shader_src = "#version 420\n"
-         "in vec3 vert_pos;\n"
-         "in vec3 vert_col;\n"
-         "in vec3 vert_normal;\n"
-         "in vec3 light_pos;\n"
-
-         "layout ( location = 0 ) out vec4 frag_color;\n"
-
-         "uniform vec3 light_color;\n"
-         "uniform float ambient_strength;\n"
-         "uniform float diffuse_strength;\n"
-         "uniform float specular_strength;\n"
-
-         "void main()\n"
-         "{\n"
-         // ambient
-         "   vec3 ambient = ambient_strength * light_color;\n"
-
-         // diffuse
-         "   vec3 norm = normalize(vert_normal);\n"
-         "   vec3 lightDir = normalize(light_pos - vert_pos);\n"
-         "   float diff = max(dot(norm, lightDir), 0.0);\n"
-         "   vec3 diffuse = diffuse_strength * diff * light_color;\n"
-
-         // specular
-         "   vec3 viewDir = normalize(-vert_pos);\n"
-         "   vec3 reflectDir = reflect(-lightDir, norm);\n"
-         "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
-         "   vec3 specular = specular_strength * spec * light_color;\n"
-
-         "   vec3 result = (ambient + diffuse + specular) * vert_col; \n"
-         "   frag_color = vec4(result, 1.0); \n"
-         "}";
-
-      shader_ptr_t vertex_shader = std::make_shared<shader_t>(v_shader_src, shader_t::ST_vertex),
-                   fragment_shader = std::make_shared<shader_t>(f_shader_src, shader_t::ST_fragment);
-      return std::make_shared<shader_prog_t>(vertex_shader, fragment_shader);
-   }
 };
 
 int main( int argc, char ** argv ) {
    examples_gui_t gui(argc, argv, "Custom Object Example");
 
    frame_ptr_t frame = std::make_shared<frame_t>();
-   frame->set_background_color(glm::vec3(1, 1, 1));
+   frame->set_background_color(glm::vec3(0, 0, 0));
    light_engine->add_frame(frame);
 
    scene = std::make_shared<scene_t>();

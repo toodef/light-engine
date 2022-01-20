@@ -1,22 +1,29 @@
 #include <memory>
 #include <string>
+#include <glm/glm.hpp>
 
 
 namespace LE {
+   class image_t;
+   typedef std::shared_ptr<image_t> image_ptr_t;
+
+
    class image_t {
    public:
       image_t(std::string const& path);
+      image_t(std::shared_ptr<unsigned char> const & data, size_t width, size_t height, size_t channels_num);
       ~image_t();
 
-      const unsigned char* data() const;
+      const std::shared_ptr<unsigned char> data() const;
       size_t width() const;
       size_t height() const;
       size_t channels_num() const;
 
+      static image_ptr_t generate_chess(size_t x_cells_num, size_t y_cells_num);
+      static image_ptr_t generate_chess(size_t x_cells_num, size_t y_cells_num, glm::uvec3 const& color1, glm::uvec3 const& color2);
+
    private:
-      unsigned char* data_ = nullptr;
+      std::shared_ptr<unsigned char> data_ = nullptr;
       int width_ = 0, height_ = 0, channels_num_ = 0;
    };
-
-   typedef std::shared_ptr<image_t> image_ptr_t;
 }

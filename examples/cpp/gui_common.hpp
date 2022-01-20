@@ -16,6 +16,7 @@ using namespace LE::Utils;
 
 std::unique_ptr<light_engine_t> light_engine;
 scene_ptr_t scene;
+camera_ptr_t camera;
 user_camera_ptr_t user_camera;
 
 void gl_debug_proc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, GLchar const * message, GLvoid const * user_param) {
