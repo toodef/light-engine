@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 
-#include "../../../../../include/frame/scene/object/shader/shader.hpp"
+#include <frame/scene/object/material/shader/shader.hpp>
 
 using namespace LE;
 

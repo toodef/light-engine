@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 
-#include "../../../../../include/frame/scene/object/texture/texture.hpp"
+#include <frame/scene/object/material/texture/texture.hpp>
 
 using namespace LE;
 

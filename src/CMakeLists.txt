@@ -7,9 +7,10 @@ set(SOURCE_FILES
         frame/scene/camera/camera.cpp
         frame/scene/object/buffer/buffer.cpp
         frame/scene/object/object.cpp
-        frame/scene/object/shader/shader.cpp
-        frame/scene/object/shader/uniform_variables.cpp
-        frame/scene/object/texture/texture.cpp
+        frame/scene/object/material/shader/shader.cpp
+        frame/scene/object/material/shader/uniform_variables.cpp
+        frame/scene/object/material/texture/texture.cpp
+        frame/scene/object/material/material.cpp
         frame/scene/object/builtin_objects.cpp
         frame/scene/scene.cpp
         frame/frame.cpp
@@ -25,8 +26,9 @@ set(HEADER_FILES
         ../include/frame/scene/object/builtin_objects.hpp
         ../include/frame/scene/object/buffer/buffer.hpp
         ../include/frame/scene/camera/camera.hpp
-        ../include/frame/scene/object/shader/shader.hpp
-        ../include/frame/scene/object/texture/texture.hpp
+        ../include/frame/scene/object/material/shader/shader.hpp
+        ../include/frame/scene/object/material/texture/texture.hpp
+        ../include/frame/scene/object/material/material.hpp
         ../include/utils/user_camera.hpp
         ../include/utils/image.hpp
         ../include/light_engine.hpp)

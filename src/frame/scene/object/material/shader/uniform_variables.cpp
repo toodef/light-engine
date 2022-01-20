@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <glm/ext.hpp>
 
-#include "../../../../../include/frame/scene/object/shader/shader.hpp"
+#include <frame/scene/object/material/shader/shader.hpp>
 
 using namespace LE;
 
